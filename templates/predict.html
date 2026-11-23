@@ -1,0 +1,553 @@
+{% extends "base.html" %}
+
+{% block title %}Detect Plant Leaf Disease — PlantCare AI{% endblock %}
+
+{% block content %}
+<div class="container py-4 py-lg-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{{ url_for('home') }}" class="text-decoration-none text-forest-green"><i class="bi bi-house-door"></i> Home</a></li>
+            <li class="breadcrumb-item active text-muted" aria-current="page">Detect Disease</li>
+        </ol>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="text-center max-w-700 mx-auto mb-4">
+        <span class="badge rounded-pill bg-subtle-green text-forest-green px-3 py-1 mb-2 border border-success-subtle fw-semibold">
+            <i class="bi bi-cpu-fill text-success-accent me-1"></i> Phase 3 Live AI Diagnostic Portal
+        </span>
+        <h2 class="fw-bold font-heading text-forest-dark mb-2">Plant Leaf Disease Detection</h2>
+        <p class="text-muted lead fs-6">
+            Upload or drag-and-drop a photograph of a plant leaf. Our backend validates file integrity with Pillow before classifying conditions with our trained MobileNetV2 CNN.
+        </p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        <!-- =================================================================== -->
+        <!-- Upload & Validation Form Column                                     -->
+        <!-- =================================================================== -->
+        <div class="col-lg-7 col-md-10">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white upload-main-card">
+                
+                <form id="leafUploadForm" action="{{ url_for('predict') }}" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <!-- Drop Zone Area -->
+                    <div id="dropZone" class="upload-dropzone p-4 p-sm-5 text-center rounded-4 border-2 border-dashed mb-3 transition-all" tabindex="0" role="button" aria-label="Upload leaf image by dropping or clicking">
+                        <input type="file" id="fileInput" name="file" class="d-none" accept=".jpg,.jpeg,.png">
+                        
+                        <div class="dropzone-content">
+                            <div class="dropzone-icon-wrapper mb-3 mx-auto">
+                                <img src="{{ url_for('static', filename='images/leaf-scan.svg') }}" alt="Scan Leaf Icon" class="dropzone-svg-icon" width="80" height="80">
+                            </div>
+                            <h5 class="fw-bold text-forest-dark mb-1">Drag and drop your leaf photo here</h5>
+                            <p class="text-muted small mb-3">or browse from your local device</p>
+                            
+                            <button type="button" id="browseBtn" class="btn btn-outline-forest rounded-pill px-4 py-2 small fw-semibold">
+                                <i class="bi bi-folder2-open me-2"></i> Browse Image
+                            </button>
+                            
+                            <div class="mt-3 text-muted x-small">
+                                <i class="bi bi-info-circle me-1"></i> Accepted formats: <strong>JPG, JPEG, PNG</strong> • Maximum size: <strong>5 MB</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Client-Side Live Preview Container (Initially Hidden until file chosen) -->
+                    <div id="clientPreviewContainer" class="d-none mb-4">
+                        <div class="card border border-success-subtle rounded-4 p-3 bg-subtle-green">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <span class="fw-bold small text-forest-dark">
+                                    <i class="bi bi-image me-1"></i> Selected Image Preview
+                                </span>
+                                <button type="button" id="removeFileBtn" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1">
+                                    <i class="bi bi-trash3 me-1"></i> Clear
+                                </button>
+                            </div>
+
+                            <div class="row align-items-center g-3">
+                                <div class="col-sm-4 text-center">
+                                    <img id="clientPreviewImg" src="#" alt="Selected Leaf Preview" class="img-fluid rounded-3 shadow-xs border bg-white max-h-160 object-fit-cover">
+                                </div>
+                                <div class="col-sm-8">
+                                    <ul class="list-unstyled mb-0 small text-muted">
+                                        <li class="mb-1"><strong class="text-forest-dark">File Name:</strong> <span id="clientFileName" class="text-break">-</span></li>
+                                        <li class="mb-1"><strong class="text-forest-dark">File Size:</strong> <span id="clientFileSize">-</span></li>
+                                        <li class="mb-1"><strong class="text-forest-dark">Format:</strong> <span id="clientFileType">-</span></li>
+                                        <li><strong class="text-forest-dark">Client Check:</strong> <span class="badge bg-success-accent text-white"><i class="bi bi-check2"></i> Passed Limit (&lt; 5MB)</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Client-side Error Message Alert (Initially Hidden) -->
+                    <div id="clientErrorAlert" class="alert alert-danger alert-dismissible fade show rounded-4 border-0 d-none mb-3" role="alert">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-exclamation-triangle-fill fs-5 text-danger"></i>
+                            <div id="clientErrorMessage" class="small flex-grow-1"></div>
+                        </div>
+                    </div>
+
+                    <!-- Privacy-Preserving Image Storage Consent -->
+                    <div class="card border border-success-subtle bg-subtle-green rounded-4 p-3 mb-3 text-start">
+                        <div class="form-check form-switch d-flex align-items-center gap-2 mb-0">
+                            <input class="form-check-input mt-0" type="checkbox" id="saveImageConsent" name="save_image" role="switch">
+                            <label class="form-check-label small text-forest-dark fw-semibold" for="saveImageConsent">
+                                <i class="bi bi-shield-lock me-1 text-forest-green"></i> Save leaf photo with prediction history
+                            </label>
+                        </div>
+                        <div class="text-muted x-small mt-1 ps-4">
+                            Optional — Disabled by default. If unchecked, your diagnostic metrics are saved to SQLite without storing your original photo permanently on disk.
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-grid">
+                        <button type="submit" id="submitBtn" class="btn btn-forest-primary btn-lg rounded-pill py-3 d-flex align-items-center justify-content-center gap-2 shadow-sm">
+                            <i class="bi bi-shield-check fs-5"></i>
+                            <span id="submitBtnText">Detect Plant Disease</span>
+                            <span id="submitSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- Guidelines & Photo Quality Tips Column                              -->
+        <!-- =================================================================== -->
+        <div class="col-lg-5 col-md-10">
+            <!-- Best Practices Card -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <div class="icon-circle-sm bg-subtle-green text-forest-green">
+                        <i class="bi bi-lightbulb-fill"></i>
+                    </div>
+                    <h5 class="fw-bold font-heading text-forest-dark mb-0">Best Practices for Leaf Photos</h5>
+                </div>
+                
+                <p class="text-muted small mb-3">
+                    For optimal classification accuracy in deep learning systems, input leaf images must satisfy key visual conditions:
+                </p>
+
+                <ul class="list-unstyled mb-0 d-flex flex-column gap-3 small text-muted">
+                    <li class="d-flex align-items-start gap-2">
+                        <i class="bi bi-check-circle-fill text-success-accent fs-6 mt-1 flex-shrink-0"></i>
+                        <div>
+                            <strong class="text-forest-dark">Single Leaf Focus:</strong>
+                            Ensure only one leaf occupies the majority of the frame without dense background clutter.
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start gap-2">
+                        <i class="bi bi-check-circle-fill text-success-accent fs-6 mt-1 flex-shrink-0"></i>
+                        <div>
+                            <strong class="text-forest-dark">Natural & Even Lighting:</strong>
+                            Avoid harsh sun glare, extreme shadows, or overly dim flash lighting that washes out lesion colors.
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start gap-2">
+                        <i class="bi bi-check-circle-fill text-success-accent fs-6 mt-1 flex-shrink-0"></i>
+                        <div>
+                            <strong class="text-forest-dark">Sharp & In-Focus:</strong>
+                            Ensure visual focus is locked onto visible spots, rust pustules, or discolored vein chlorosis.
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start gap-2">
+                        <i class="bi bi-x-circle-fill text-danger fs-6 mt-1 flex-shrink-0"></i>
+                        <div>
+                            <strong class="text-forest-dark">Avoid Blurry / Distant Shots:</strong>
+                            Photos taken from meters away or with severe motion blur cannot be reliably diagnosed.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Phase 3 Live AI Model Specs Card -->
+            <div class="card border border-success-subtle shadow-sm rounded-4 p-4 bg-white">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="bi bi-cpu-fill text-forest-green fs-5"></i>
+                    <h6 class="fw-bold text-forest-dark mb-0">Phase 3 Live AI Architecture</h6>
+                </div>
+                <p class="text-muted small mb-3">
+                    Active <strong>MobileNetV2 Transfer Learning CNN</strong> running single-pass inference across 7 target classes.
+                </p>
+                <div class="p-3 rounded-3 bg-subtle-green border border-success-subtle small font-monospace">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="text-muted">Test Split Accuracy:</span>
+                        <strong class="text-forest-dark">96.04%</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="text-muted">Macro F1-Score:</span>
+                        <strong class="text-forest-dark">95.73%</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="text-muted">Target Crops:</span>
+                        <strong class="text-forest-dark">Potato, Tomato</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="text-muted">Scope:</span>
+                        <strong class="text-forest-dark">7 Conditions</strong>
+                    </div>
+                    <div class="text-muted x-small mt-2 pt-2 border-top">
+                        <i class="bi bi-info-circle me-1"></i> Evaluated on 1,163 held-out PlantVillage test samples; not a field guarantee.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- Prediction / Validation Result Card                                    -->
+    <!-- ======================================================================= -->
+    {% if result %}
+    <div id="validationResultSection" class="mt-5">
+        <div class="card border-0 shadow rounded-4 overflow-hidden bg-white max-w-900 mx-auto">
+            
+            {% if result.status == 'success' %}
+            <!-- =============================================================== -->
+            <!-- LIVE MODEL PREDICTION RESULT                                   -->
+            <!-- =============================================================== -->
+            
+            <!-- Header Banner -->
+            <div class="{% if result.is_healthy %}bg-forest-gradient{% else %}bg-forest-gradient{% endif %} text-white p-4 d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="icon-circle bg-white {% if result.is_healthy %}text-forest-green{% else %}text-danger{% endif %}">
+                        <i class="bi {% if result.is_healthy %}bi-check-circle-fill{% else %}bi-exclamation-diamond-fill{% endif %} fs-3"></i>
+                    </div>
+                    <div>
+                        <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                            <span class="badge {% if result.is_healthy %}bg-mint-accent text-forest-dark{% else %}bg-warning text-dark{% endif %} rounded-pill px-3 py-1 fw-bold small">
+                                {% if result.is_healthy %}Foliage Healthy{% else %}Infection Detected{% endif %}
+                            </span>
+                            <span class="badge bg-white bg-opacity-25 text-white rounded-pill px-3 py-1 fw-semibold small">
+                                Crop: {{ result.crop }}
+                            </span>
+                            {% if result.record_id %}
+                            <span class="badge bg-subtle-green text-forest-dark rounded-pill px-3 py-1 fw-semibold small">
+                                <i class="bi bi-database-check text-forest-green me-1"></i> Recorded #{{ result.record_id }}
+                            </span>
+                            {% endif %}
+                        </div>
+                        <h4 class="fw-bold font-heading mb-0">{{ result.display_name }}</h4>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{{ url_for('history') }}" class="btn btn-outline-light btn-sm rounded-pill px-3 py-2">
+                        <i class="bi bi-clock-history me-1"></i> View History
+                    </a>
+                    <a href="{{ url_for('predict') }}" class="btn btn-outline-light btn-sm rounded-pill px-3 py-2">
+                        <i class="bi bi-arrow-repeat me-1"></i> Scan Another
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card Body Content -->
+            <div class="p-4 p-md-5">
+
+                <!-- Low Confidence / Uncertainty Warning Alert -->
+                {% if result.is_uncertain %}
+                <div class="alert alert-warning border border-warning-subtle rounded-4 p-4 mb-4 d-flex align-items-start gap-3 shadow-xs">
+                    <i class="bi bi-exclamation-triangle-fill text-warning fs-3 flex-shrink-0 mt-1"></i>
+                    <div>
+                        <h6 class="fw-bold text-dark mb-1">Low Confidence Prediction (Under 70%)</h6>
+                        <p class="small text-muted mb-2">
+                            {{ result.uncertainty_warning }}
+                        </p>
+                        <div class="p-2 rounded-3 bg-white border border-warning-subtle x-small text-muted">
+                            <i class="bi bi-info-circle-fill text-warning me-1"></i>
+                            <strong>Agronomic Notice:</strong> Confidence thresholds cannot reliably detect all unsupported crop species, non-leaf inputs, or novel pathogens. If uncertain, inspect neighboring plants and consult your regional agricultural extension specialist.
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Primary Diagnosis & Image Row -->
+                <div class="row g-4 align-items-center mb-4">
+                    <!-- Image Preview -->
+                    <div class="col-md-5 text-center">
+                        <div class="p-2 border rounded-4 bg-light shadow-xs d-inline-block w-100">
+                            <img src="{{ result.preview_uri }}" alt="Uploaded leaf preview" class="img-fluid rounded-3 max-h-250 object-fit-contain w-100">
+                        </div>
+                        <div class="mt-2 text-muted small">
+                            <i class="bi bi-file-earmark-image"></i> {{ result.filename }}
+                        </div>
+                    </div>
+
+                    <!-- Diagnosis Details -->
+                    <div class="col-md-7">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="text-muted small text-uppercase fw-bold letter-spacing-1">Deep Learning Diagnosis</span>
+                            <span class="badge bg-subtle-green text-forest-green border">MobileNetV2 CNN</span>
+                        </div>
+                        <h3 class="fw-bold text-forest-dark mb-3">{{ result.display_name }}</h3>
+
+                        <!-- Confidence Meter -->
+                        <div class="p-3 rounded-4 bg-subtle-green border border-success-subtle mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="small fw-bold text-forest-dark">Model Confidence Probability</span>
+                                <span class="fw-bold text-forest-green fs-5">{{ result.confidence_percent }}</span>
+                            </div>
+                            <div class="progress" style="height: 10px; border-radius: 6px;">
+                                <div class="progress-bar {% if result.confidence >= 0.85 %}bg-forest-primary{% elif result.confidence >= 0.70 %}bg-success-accent{% else %}bg-warning{% endif %}" 
+                                     role="progressbar" 
+                                     style="width: {{ result.confidence_percent }};" 
+                                     aria-valuenow="{{ result.confidence * 100 }}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100">
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between text-muted x-small mt-1">
+                                <span>Softmax probability output</span>
+                                <span>Threshold: &ge; 70% required</span>
+                            </div>
+                        </div>
+
+                        <!-- Technical Image & Pathogen Specs -->
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered rounded-3 overflow-hidden small mb-0">
+                                <tbody>
+                                    <tr>
+                                        <th class="bg-light text-muted w-40">Target Crop</th>
+                                        <td class="fw-semibold">{{ result.crop }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="bg-light text-muted">Condition</th>
+                                        <td class="fw-semibold">
+                                            {% if result.is_healthy %}
+                                            <span class="text-success-accent"><i class="bi bi-check-circle-fill me-1"></i>Healthy</span>
+                                            {% else %}
+                                            <span class="text-danger"><i class="bi bi-exclamation-triangle-fill me-1"></i>{{ result.disease_name }}</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="bg-light text-muted">Pathogen Agent</th>
+                                        <td class="fw-semibold text-break">{{ result.pathogen }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="bg-light text-muted">Resolution / Size</th>
+                                        <td>{{ result.dimensions }} ({{ result.size_kb }} KB)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Symptoms Description Section -->
+                <div class="p-4 rounded-4 bg-light border mb-4">
+                    <h6 class="fw-bold text-forest-dark mb-2">
+                        <i class="bi bi-search me-2 text-forest-green"></i>Diagnostic Symptoms &amp; Characteristic Signs
+                    </h6>
+                    <p class="text-muted small mb-0 leading-relaxed">
+                        {{ result.symptoms }}
+                    </p>
+                </div>
+
+                <!-- Management & Prevention Strategies -->
+                <div class="row g-4 mb-4">
+                    <!-- Cultural & Organic Management -->
+                    <div class="col-md-6">
+                        <div class="card h-100 border border-success-subtle rounded-4 p-4 bg-white shadow-xs">
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <div class="icon-circle-xs bg-subtle-green text-forest-green">
+                                    <i class="bi bi-flower1"></i>
+                                </div>
+                                <h6 class="fw-bold text-forest-dark mb-0">Cultural &amp; Organic Management</h6>
+                            </div>
+                            <ul class="list-unstyled small text-muted d-flex flex-column gap-2 mb-0">
+                                {% for remedy in result.organic_remedies %}
+                                <li class="d-flex align-items-start gap-2">
+                                    <i class="bi bi-check-circle-fill text-success-accent mt-1 flex-shrink-0"></i>
+                                    <span>{{ remedy }}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Conventional Protection / Prevention -->
+                    <div class="col-md-6">
+                        <div class="card h-100 border border-info-subtle rounded-4 p-4 bg-white shadow-xs">
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <div class="icon-circle-xs bg-subtle-green text-forest-green">
+                                    <i class="bi bi-shield-shaded"></i>
+                                </div>
+                                <h6 class="fw-bold text-forest-dark mb-0">Protective Treatments &amp; Prevention</h6>
+                            </div>
+                            <ul class="list-unstyled small text-muted d-flex flex-column gap-2 mb-0">
+                                {% for chem in result.chemical_treatments %}
+                                <li class="d-flex align-items-start gap-2">
+                                    <i class="bi bi-arrow-right-circle-fill text-info mt-1 flex-shrink-0"></i>
+                                    <span>{{ chem }}</span>
+                                </li>
+                                {% endfor %}
+                                {% for prev in result.prevention %}
+                                <li class="d-flex align-items-start gap-2">
+                                    <i class="bi bi-check2-circle text-forest-green mt-1 flex-shrink-0"></i>
+                                    <span>{{ prev }}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Softmax Probability Distribution across All 7 Classes -->
+                {% if result.distribution %}
+                <div class="card border rounded-4 p-4 bg-white mb-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-bar-chart-fill text-forest-green"></i>
+                            <h6 class="fw-bold text-forest-dark mb-0">Model Probability Distribution (7 Classes)</h6>
+                        </div>
+                        <span class="badge bg-light text-muted border small">Normalized Softmax</span>
+                    </div>
+                    <div class="d-flex flex-column gap-2">
+                        {% for class_name, prob in result.distribution.items() %}
+                        <div>
+                            <div class="d-flex justify-content-between text-muted x-small mb-1">
+                                <span class="{% if class_name == result.raw_class %}fw-bold text-forest-dark{% endif %}">
+                                    {{ class_name }}
+                                    {% if class_name == result.raw_class %}<i class="bi bi-check-circle-fill text-success-accent ms-1"></i>{% endif %}
+                                </span>
+                                <span class="{% if class_name == result.raw_class %}fw-bold text-forest-green{% endif %}">{{ "%.2f"|format(prob) }}%</span>
+                            </div>
+                            <div class="progress" style="height: 6px; border-radius: 4px;">
+                                <div class="progress-bar {% if class_name == result.raw_class %}bg-forest-primary{% else %}bg-secondary bg-opacity-25{% endif %}" 
+                                     role="progressbar" 
+                                     style="width: {{ prob }}%;" 
+                                     aria-valuenow="{{ prob }}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100">
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- General Advisory Disclaimer -->
+                <div class="p-3 rounded-4 bg-light border border-secondary-subtle small text-muted d-flex align-items-start gap-2 mb-4">
+                    <i class="bi bi-shield-exclamation text-secondary fs-5 flex-shrink-0 mt-1"></i>
+                    <div>
+                        <strong class="text-forest-dark">Agronomic &amp; Advisory Notice:</strong>
+                        {{ result.advisory_notice }}
+                    </div>
+                </div>
+
+                <!-- Call to action buttons -->
+                <div class="text-center pt-2 d-flex justify-content-center gap-2 flex-wrap">
+                    <a href="{{ url_for('history') }}" class="btn btn-outline-forest rounded-pill px-4 py-2">
+                        <i class="bi bi-clock-history me-1"></i> View Scan History
+                    </a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-forest rounded-pill px-4 py-2">
+                        <i class="bi bi-pie-chart me-1"></i> Analytics Dashboard
+                    </a>
+                    <a href="{{ url_for('predict') }}" class="btn btn-forest-primary rounded-pill px-4 py-2">
+                        <i class="bi bi-plus-circle me-1"></i> Scan Another Leaf
+                    </a>
+                </div>
+
+            </div>
+
+            {% elif result.status == 'model_not_ready' %}
+            <!-- =============================================================== -->
+            <!-- MODEL OFFLINE / UNINITIALIZED FALLBACK NOTICE                  -->
+            <!-- =============================================================== -->
+            
+            <!-- Header Banner -->
+            <div class="bg-forest-gradient text-white p-4 d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="icon-circle bg-white text-forest-green">
+                        <i class="bi bi-shield-check fs-3"></i>
+                    </div>
+                    <div>
+                        <span class="badge bg-mint-accent text-forest-dark rounded-pill px-3 py-1 fw-bold small mb-1">
+                            Validation Pipeline Active
+                        </span>
+                        <h4 class="fw-bold font-heading mb-0">Leaf Image Successfully Validated</h4>
+                    </div>
+                </div>
+                <div>
+                    <a href="{{ url_for('predict') }}" class="btn btn-outline-light btn-sm rounded-pill px-3 py-2">
+                        <i class="bi bi-arrow-repeat me-1"></i> Scan Another Leaf
+                    </a>
+                </div>
+            </div>
+
+            <div class="p-4 p-md-5">
+                <div class="row g-4 align-items-center mb-4">
+                    <div class="col-md-5 text-center">
+                        <div class="p-2 border rounded-4 bg-light shadow-xs d-inline-block">
+                            <img src="{{ result.preview_uri }}" alt="Uploaded leaf preview" class="img-fluid rounded-3 max-h-250 object-fit-contain">
+                        </div>
+                        <div class="mt-2 text-muted small">
+                            <i class="bi bi-file-earmark-image"></i> {{ result.filename }}
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <h5 class="fw-bold text-forest-dark mb-3">Validated Image Specifications</h5>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered rounded-3 overflow-hidden small">
+                                <tbody>
+                                    <tr>
+                                        <th class="bg-light text-muted w-40">Original Filename</th>
+                                        <td class="fw-semibold text-break">{{ result.filename }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="bg-light text-muted">Detected Format</th>
+                                        <td><span class="badge bg-subtle-green text-forest-green border">{{ result.format }}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="bg-light text-muted">Dimensions</th>
+                                        <td class="fw-semibold">{{ result.dimensions }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="bg-light text-muted">File Size</th>
+                                        <td>{{ result.size_kb }} KB</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="bg-light text-muted">Integrity Check</th>
+                                        <td><span class="badge bg-success-accent text-white"><i class="bi bi-check-circle-fill me-1"></i> Passed</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Model Offline Notice Box -->
+                <div class="p-4 rounded-4 bg-subtle-green border border-success-subtle mb-4">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="icon-circle-sm bg-forest-primary text-white flex-shrink-0 mt-1">
+                            <i class="bi bi-cpu-fill"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold text-forest-dark mb-1">
+                                {{ result.phase_message }}
+                            </h5>
+                            <p class="text-muted small mb-0">
+                                {{ result.phase_details }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <a href="{{ url_for('predict') }}" class="btn btn-forest-primary rounded-pill px-4 py-2">
+                        <i class="bi bi-plus-circle me-1"></i> Validate Another Leaf Image
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

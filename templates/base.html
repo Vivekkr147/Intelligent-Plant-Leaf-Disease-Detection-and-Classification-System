@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="PlantCare AI - Intelligent Plant Leaf Disease Detection and Classification System. Built with Python Flask, Bootstrap 5, and Deep Learning (CNN).">
+    <meta name="author" content="vivek kumar - MCA Minor Project">
+    <title>{% block title %}PlantCare AI — Intelligent Plant Leaf Disease Detection{% endblock %}</title>
+
+    <!-- Google Fonts: Inter & Outfit for modern clean typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Bootstrap 5.3.3 CSS via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- Bootstrap Icons via CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Custom Agricultural Theme Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/logo.svg') }}">
+</head>
+
+<body class="d-flex flex-column min-vh-100 bg-app-light">
+
+    <!-- ======================================================================= -->
+    <!-- Navigation Bar                                                          -->
+    <!-- ======================================================================= -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm py-2" aria-label="Main navigation">
+        <div class="container">
+            <!-- Brand Logo & Name -->
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="PlantCare AI Logo" width="40"
+                    height="40" class="brand-logo-img">
+                <div class="brand-text-group">
+                    <span class="brand-title fw-bold">PlantCare <span class="text-success-accent">AI</span></span>
+                    <span
+                        class="badge rounded-pill bg-subtle-green text-forest-green ms-1 border border-success-subtle phase-badge">Phase
+                        4</span>
+                </div>
+            </a>
+
+            <!-- Mobile Navbar Toggle Button -->
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Nav Links & CTA Button -->
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center gap-lg-1">
+                    <li class="nav-item">
+                        <a class="nav-link px-3 {% if active_page == 'home' %}active fw-semibold text-forest-green{% endif %}"
+                            href="{{ url_for('home') }}">
+                            <i class="bi bi-house-door me-1"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 {% if active_page == 'predict' %}active fw-semibold text-forest-green{% endif %}"
+                            href="{{ url_for('predict') }}">
+                            <i class="bi bi-camera me-1"></i> Detect Disease
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 {% if active_page == 'history' %}active fw-semibold text-forest-green{% endif %}"
+                            href="{{ url_for('history') }}">
+                            <i class="bi bi-clock-history me-1"></i> History
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 {% if active_page == 'dashboard' %}active fw-semibold text-forest-green{% endif %}"
+                            href="{{ url_for('dashboard') }}">
+                            <i class="bi bi-pie-chart me-1"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 {% if active_page == 'about' %}active fw-semibold text-forest-green{% endif %}"
+                            href="{{ url_for('about') }}">
+                            <i class="bi bi-info-circle me-1"></i> About Project
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 {% if active_page == 'contact' %}active fw-semibold text-forest-green{% endif %}"
+                            href="{{ url_for('contact') }}">
+                            <i class="bi bi-envelope me-1"></i> Contact
+                        </a>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-forest-primary rounded-pill px-3 py-2 d-inline-flex align-items-center gap-2 shadow-sm"
+                            href="{{ url_for('predict') }}">
+                            <i class="bi bi-virus"></i>
+                            <span>Scan Leaf Now</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ======================================================================= -->
+    <!-- Flash Messages (User feedback for warnings, errors, successes)          -->
+    <!-- ======================================================================= -->
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show rounded-4 shadow-sm border-0 d-flex align-items-center gap-2 mb-3"
+            role="alert">
+            {% if category == 'success' %}
+            <i class="bi bi-check-circle-fill fs-5 text-success"></i>
+            {% elif category == 'danger' %}
+            <i class="bi bi-exclamation-triangle-fill fs-5 text-danger"></i>
+            {% elif category == 'warning' %}
+            <i class="bi bi-exclamation-circle-fill fs-5 text-warning"></i>
+            {% else %}
+            <i class="bi bi-info-circle-fill fs-5 text-info"></i>
+            {% endif %}
+            <div class="flex-grow-1">{{ message }}</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- Main Content Block                                                      -->
+    <!-- ======================================================================= -->
+    <main class="flex-grow-1">
+        {% if custom_error %}
+        <!-- Standalone Friendly Error View (e.g. 404 / 500) -->
+        <section class="py-5 text-center my-auto">
+            <div class="container py-5">
+                <div class="card border-0 shadow-sm rounded-4 p-5 mx-auto max-w-600 bg-white">
+                    <div class="display-1 fw-bold text-forest-green mb-3">{{ custom_error.code }}</div>
+                    <h2 class="fw-bold mb-3">{{ custom_error.title }}</h2>
+                    <p class="text-muted mb-4 lead fs-6">{{ custom_error.message }}</p>
+                    <div>
+                        <a href="{{ url_for('home') }}" class="btn btn-forest-primary rounded-pill px-4 py-2">
+                            <i class="bi bi-house-door me-2"></i> Return to Homepage
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% else %}
+        {% block content %}{% endblock %}
+        {% endif %}
+    </main>
+
+    <!-- ======================================================================= -->
+    <!-- Footer                                                                  -->
+    <!-- ======================================================================= -->
+    <footer class="bg-forest-dark text-white pt-5 pb-4 mt-auto border-top border-forest-darker">
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <!-- Project Identity & Summary -->
+                <div class="col-lg-5 col-md-6">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="PlantCare AI Logo"
+                            width="36" height="36" class="footer-logo">
+                        <span class="fs-4 fw-bold font-heading">PlantCare <span
+                                class="text-mint-accent">AI</span></span>
+                    </div>
+                    <p class="text-white-50 small pe-lg-4 mb-3 leading-relaxed">
+                        Intelligent Plant Leaf Disease Detection and Classification System. An MCA university minor
+                        project engineered to support farmers, agricultural researchers, and home gardeners with early
+                        AI-based disease diagnosis.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span
+                            class="badge bg-white text-dark bg-opacity-10 border border-light border-opacity-25 py-2 px-3 small rounded-pill">
+                            <i class="bi bi-code-slash me-1 text-mint-accent"></i> Flask 3.x
+                        </span>
+                        <span
+                            class="badge bg-white text-dark bg-opacity-10 border border-light border-opacity-25 py-2 px-3 small rounded-pill">
+                            <i class="bi bi-cpu me-1 text-mint-accent"></i> MobileNetV2 (Phase 2)
+                        </span>
+                        <span
+                            class="badge bg-white text-dark bg-opacity-10 border border-light border-opacity-25 py-2 px-3 small rounded-pill">
+                            <i class="bi bi-shield-check me-1 text-mint-accent"></i> Pillow Verified
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Navigation Quick Links -->
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="text-uppercase text-mint-accent fw-bold mb-3 small tracking-wider">Quick Navigation</h6>
+                    <ul class="list-unstyled mb-0 d-flex flex-column gap-2 small">
+                        <li>
+                            <a href="{{ url_for('home') }}" class="footer-link">
+                                <i class="bi bi-chevron-right me-1 text-white-50"></i> Home
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('predict') }}" class="footer-link">
+                                <i class="bi bi-chevron-right me-1 text-white-50"></i> Detect Leaf Disease
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('history') }}" class="footer-link">
+                                <i class="bi bi-chevron-right me-1 text-white-50"></i> Prediction History
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('dashboard') }}" class="footer-link">
+                                <i class="bi bi-chevron-right me-1 text-white-50"></i> Analytics Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('about') }}" class="footer-link">
+                                <i class="bi bi-chevron-right me-1 text-white-50"></i> About Project Architecture
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('contact') }}" class="footer-link">
+                                <i class="bi bi-chevron-right me-1 text-white-50"></i> Academic Contact & FAQ
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Project Academic Details -->
+                <div class="col-lg-4 col-md-12">
+                    <h6 class="text-uppercase text-mint-accent fw-bold mb-3 small tracking-wider">Academic Information
+                    </h6>
+                    <div class="p-3 rounded-4 bg-white bg-opacity-10 border border-white border-opacity-10 small">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <i class="bi bi-mortarboard-fill text-mint-accent fs-5"></i>
+                            <div>
+                                <span class="d-block fw-semibold text-white">MCA Minor Project</span>
+                                <span class="text-white-50">Department of Computer Applications</span>
+                            </div>
+                        </div>
+                        <hr class="border-white border-opacity-10 my-2">
+                        <p class="text-white-50 mb-0 small">
+                            <strong class="text-white">Developer:</strong> vivek kumar<br>
+                            <strong class="text-white">Status:</strong> Phase 4 (Prediction History, Analytics Dashboard & MobileNetV2 CNN)
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Disclaimer & Copyright -->
+            <div
+                class="pt-3 border-top border-white border-opacity-10 text-center text-md-between d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 small text-white-50">
+                <div>
+                    &copy; 2026 PlantCare AI — Intelligent Plant Leaf Disease Detection System. All rights reserved.
+                </div>
+                <div class="text-mint-subtle">
+                    <i class="bi bi-database-check me-1"></i> Phase 4/5 Architecture: SQLite Prediction Logging & Analytics Dashboard Active (96.04% Accuracy on Held-Out PlantVillage Test Split)
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5.3.3 JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <!-- Custom Client-Side Script (Drag-and-Drop, Image Previews, Client Validation) -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>

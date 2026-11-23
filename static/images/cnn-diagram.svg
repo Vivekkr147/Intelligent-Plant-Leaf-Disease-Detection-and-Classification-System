@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 240" width="100%" height="100%" fill="none">
+  <defs>
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#1b4332" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <!-- Step 1: Input Leaf Image -->
+  <g transform="translate(20, 30)" filter="url(#cardShadow)">
+    <rect width="130" height="170" rx="12" fill="#ffffff" stroke="#b7e4c7" stroke-width="2"/>
+    <rect x="15" y="15" width="100" height="90" rx="8" fill="#e8f5e9"/>
+    <!-- Leaf mini icon -->
+    <path d="M65 30 C50 40 45 60 55 75 C65 72 70 65 70 50 Z" fill="#2d6a4f"/>
+    <path d="M65 30 C80 40 85 60 75 75 C65 72 65 65 65 50 Z" fill="#52b788"/>
+    <line x1="65" y1="35" x2="65" y2="85" stroke="#1b4332" stroke-width="2"/>
+    <text x="65" y="130" font-family="'Inter', sans-serif" font-size="13" font-weight="700" fill="#1b4332" text-anchor="middle">Input Image</text>
+    <text x="65" y="150" font-family="'Inter', sans-serif" font-size="11" fill="#6c757d" text-anchor="middle">224 x 224 x 3</text>
+  </g>
+
+  <!-- Arrow 1 -->
+  <path d="M165 115 L185 115" stroke="#52b788" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="190,115 183,110 183,120" fill="#52b788"/>
+
+  <!-- Step 2: Convolution + ReLU -->
+  <g transform="translate(200, 30)" filter="url(#cardShadow)">
+    <rect width="130" height="170" rx="12" fill="#ffffff" stroke="#b7e4c7" stroke-width="2"/>
+    <rect x="25" y="20" width="80" height="80" rx="6" fill="#d8f3dc" stroke="#2d6a4f" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <rect x="35" y="30" width="30" height="30" rx="4" fill="#52b788" opacity="0.8"/>
+    <text x="65" y="125" font-family="'Inter', sans-serif" font-size="12" font-weight="700" fill="#1b4332" text-anchor="middle">Convolution</text>
+    <text x="65" y="142" font-family="'Inter', sans-serif" font-size="11" fill="#2d6a4f" text-anchor="middle">&amp; ReLU</text>
+    <text x="65" y="160" font-family="'Inter', sans-serif" font-size="10" fill="#6c757d" text-anchor="middle">Edge &amp; Texture</text>
+  </g>
+
+  <!-- Arrow 2 -->
+  <path d="M345 115 L365 115" stroke="#52b788" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="370,115 363,110 363,120" fill="#52b788"/>
+
+  <!-- Step 3: Pooling Layer -->
+  <g transform="translate(380, 30)" filter="url(#cardShadow)">
+    <rect width="130" height="170" rx="12" fill="#ffffff" stroke="#b7e4c7" stroke-width="2"/>
+    <rect x="30" y="30" width="70" height="70" rx="6" fill="#e8f5e9" stroke="#52b788" stroke-width="1.5"/>
+    <line x1="30" y1="65" x2="100" y2="65" stroke="#74c69d" stroke-width="1"/>
+    <line x1="65" y1="30" x2="65" y2="100" stroke="#74c69d" stroke-width="1"/>
+    <circle cx="47" cy="47" r="7" fill="#1b4332"/>
+    <text x="65" y="125" font-family="'Inter', sans-serif" font-size="12" font-weight="700" fill="#1b4332" text-anchor="middle">Max Pooling</text>
+    <text x="65" y="145" font-family="'Inter', sans-serif" font-size="10" fill="#6c757d" text-anchor="middle">Downsampling</text>
+    <text x="65" y="160" font-family="'Inter', sans-serif" font-size="10" fill="#6c757d" text-anchor="middle">Dimension Red.</text>
+  </g>
+
+  <!-- Arrow 3 -->
+  <path d="M525 115 L545 115" stroke="#52b788" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="550,115 543,110 543,120" fill="#52b788"/>
+
+  <!-- Step 4: MobileNetV2 Deep Features -->
+  <g transform="translate(560, 30)" filter="url(#cardShadow)">
+    <rect width="100" height="170" rx="12" fill="#ffffff" stroke="#b7e4c7" stroke-width="2"/>
+    <!-- Dense feature bars -->
+    <rect x="30" y="25" width="40" height="8" rx="4" fill="#2d6a4f"/>
+    <rect x="30" y="40" width="40" height="8" rx="4" fill="#40916c"/>
+    <rect x="30" y="55" width="40" height="8" rx="4" fill="#52b788"/>
+    <rect x="30" y="70" width="40" height="8" rx="4" fill="#74c69d"/>
+    <rect x="30" y="85" width="40" height="8" rx="4" fill="#95d5b2"/>
+    <text x="50" y="125" font-family="'Inter', sans-serif" font-size="12" font-weight="700" fill="#1b4332" text-anchor="middle">MobileNetV2</text>
+    <text x="50" y="145" font-family="'Inter', sans-serif" font-size="10" fill="#6c757d" text-anchor="middle">Bottleneck</text>
+    <text x="50" y="160" font-family="'Inter', sans-serif" font-size="10" fill="#6c757d" text-anchor="middle">Residuals</text>
+  </g>
+
+  <!-- Arrow 4 -->
+  <path d="M675 115 L690 115" stroke="#52b788" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="695,115 688,110 688,120" fill="#52b788"/>
+
+  <!-- Step 5: Softmax Classification -->
+  <g transform="translate(705, 30)" filter="url(#cardShadow)">
+    <rect width="85" height="170" rx="12" fill="#1b4332" stroke="#1b4332" stroke-width="2"/>
+    <circle cx="42" cy="45" r="14" fill="#52b788"/>
+    <path d="M36 45 L40 49 L48 41" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+    <text x="42" y="90" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">Softmax</text>
+    <text x="42" y="106" font-family="'Inter', sans-serif" font-size="10" fill="#d8f3dc" text-anchor="middle">Dense</text>
+    <text x="42" y="130" font-family="'Inter', sans-serif" font-size="10" font-weight="600" fill="#95d5b2" text-anchor="middle">Disease</text>
+    <text x="42" y="145" font-family="'Inter', sans-serif" font-size="10" font-weight="600" fill="#95d5b2" text-anchor="middle">Class</text>
+    <text x="42" y="165" font-family="'Inter', sans-serif" font-size="9" fill="#d8f3dc" text-anchor="middle">(Phase 2)</text>
+  </g>
+</svg>

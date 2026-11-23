@@ -1,0 +1,25 @@
+{
+  "model_name": "PlantCare AI MobileNetV2",
+  "timestamp": "2026-11-23T13:44:43.754838+00:00",
+  "input_resolution": [
+    224,
+    224,
+    3
+  ],
+  "num_classes": 7,
+  "classes": [
+    "Potato___Early_blight",
+    "Potato___Late_blight",
+    "Potato___healthy",
+    "Tomato___Early_blight",
+    "Tomato___Late_blight",
+    "Tomato___Leaf_Mold",
+    "Tomato___healthy"
+  ],
+  "epochs_completed": 22,
+  "final_train_accuracy": 0.9761594533920288,
+  "final_val_accuracy": 0.9487847089767456,
+  "final_train_loss": 0.07218068838119507,
+  "final_val_loss": 0.1560187041759491,
+  "smoke_test": false
+}

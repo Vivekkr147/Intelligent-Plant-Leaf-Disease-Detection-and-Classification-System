@@ -1,0 +1,14 @@
+# PlantCare AI - Python Dependencies for Phase 1
+# Modern MCA Minor Project: Intelligent Plant Leaf Disease Detection System
+
+# Core Web Framework
+Flask>=3.0.0
+
+# WSGI utilities for secure file uploads and routing
+Werkzeug>=3.0.0
+
+# Image processing and safe format validation
+Pillow>=10.0.0
+
+# Automated testing suite
+pytest>=8.0.0

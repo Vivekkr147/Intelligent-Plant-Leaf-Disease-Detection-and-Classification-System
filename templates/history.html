@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction History — PlantCare AI{% endblock %}
+
+{% block content %}
+<div class="container py-4 py-lg-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{{ url_for('home') }}" class="text-decoration-none text-forest-green"><i class="bi bi-house-door"></i> Home</a></li>
+            <li class="breadcrumb-item active text-muted" aria-current="page">Prediction History</li>
+        </ol>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <span class="badge rounded-pill bg-subtle-green text-forest-green px-3 py-1 mb-2 border border-success-subtle fw-semibold">
+                <i class="bi bi-database-check text-success-accent me-1"></i> Phase 4 Persistent Records
+            </span>
+            <h2 class="fw-bold font-heading text-forest-dark mb-1">Leaf Scan History</h2>
+            <p class="text-muted small mb-0">
+                Track, filter, and review real diagnostic records saved from MobileNetV2 inference sessions.
+            </p>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-forest rounded-pill px-3 py-2 small fw-semibold">
+                <i class="bi bi-pie-chart-fill me-1"></i> Analytics Dashboard
+            </a>
+            <a href="{{ url_for('predict') }}" class="btn btn-forest-primary rounded-pill px-3 py-2 small fw-semibold">
+                <i class="bi bi-camera-fill me-1"></i> New Scan
+            </a>
+            {% if predictions and predictions|length > 0 %}
+            <button type="button" class="btn btn-outline-danger rounded-pill px-3 py-2 small fw-semibold" data-bs-toggle="modal" data-bs-target="#clearAllModal">
+                <i class="bi bi-trash3-fill me-1"></i> Clear All
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Summary KPI Pills -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-xs rounded-4 p-3 bg-white">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="icon-circle-xs bg-subtle-green text-forest-green">
+                        <i class="bi bi-collection-fill"></i>
+                    </div>
+                    <div>
+                        <div class="x-small text-muted text-uppercase fw-bold">Total Scans</div>
+                        <h5 class="fw-bold text-forest-dark mb-0">{{ total_count }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-xs rounded-4 p-3 bg-white">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="icon-circle-xs bg-subtle-green text-success-accent">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <div>
+                        <div class="x-small text-muted text-uppercase fw-bold">Healthy</div>
+                        <h5 class="fw-bold text-success-accent mb-0">{{ healthy_count }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-xs rounded-4 p-3 bg-white">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="icon-circle-xs bg-subtle-green text-danger">
+                        <i class="bi bi-exclamation-diamond-fill"></i>
+                    </div>
+                    <div>
+                        <div class="x-small text-muted text-uppercase fw-bold">Diseased</div>
+                        <h5 class="fw-bold text-danger mb-0">{{ diseased_count }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-xs rounded-4 p-3 bg-white">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="icon-circle-xs bg-subtle-green text-info">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <div>
+                        <div class="x-small text-muted text-uppercase fw-bold">Privacy Guard</div>
+                        <h6 class="fw-bold text-forest-dark mb-0 text-truncate">Opt-In Photos</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter & Filter Reset Bar -->
+    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white mb-4">
+        <form method="GET" action="{{ url_for('history') }}" class="row g-2 align-items-center">
+            <div class="col-md-4 col-sm-6">
+                <label for="cropSelect" class="form-label x-small text-muted fw-bold mb-1">Filter by Crop:</label>
+                <select id="cropSelect" name="crop" class="form-select form-select-sm rounded-pill" onchange="this.form.submit()">
+                    <option value="all" {% if current_crop == 'all' %}selected{% endif %}>All Crops (Tomato &amp; Potato)</option>
+                    <option value="Tomato" {% if current_crop == 'Tomato' %}selected{% endif %}>Tomato Only</option>
+                    <option value="Potato" {% if current_crop == 'Potato' %}selected{% endif %}>Potato Only</option>
+                </select>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <label for="statusSelect" class="form-label x-small text-muted fw-bold mb-1">Filter by Health Condition:</label>
+                <select id="statusSelect" name="status" class="form-select form-select-sm rounded-pill" onchange="this.form.submit()">
+                    <option value="all" {% if current_status == 'all' %}selected{% endif %}>All Conditions (Healthy &amp; Infected)</option>
+                    <option value="healthy" {% if current_status == 'healthy' %}selected{% endif %}>Healthy Foliage Only</option>
+                    <option value="diseased" {% if current_status == 'diseased' %}selected{% endif %}>Diseased / Infected Only</option>
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-end justify-content-md-end gap-2 pt-2 pt-md-0">
+                {% if current_crop != 'all' or current_status != 'all' %}
+                <a href="{{ url_for('history') }}" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                    <i class="bi bi-x-circle me-1"></i> Reset Filters
+                </a>
+                {% endif %}
+                <span class="text-muted small">Showing <strong>{{ predictions|length }}</strong> records</span>
+            </div>
+        </form>
+    </div>
+
+    <!-- Prediction History Table -->
+    {% if predictions and predictions|length > 0 %}
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 small">
+                <thead class="table-light text-muted text-uppercase x-small border-bottom">
+                    <tr>
+                        <th class="ps-4 py-3" style="width: 70px;">ID</th>
+                        <th style="width: 90px;">Leaf</th>
+                        <th>Timestamp</th>
+                        <th>Crop</th>
+                        <th>Condition / Diagnosis</th>
+                        <th>Confidence</th>
+                        <th class="text-end pe-4" style="width: 100px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in predictions %}
+                    <tr>
+                        <!-- ID -->
+                        <td class="ps-4 fw-bold text-muted font-monospace">#{{ item.id }}</td>
+
+                        <!-- Thumbnail or Placeholder -->
+                        <td>
+                            {% if item.image_path %}
+                            <img src="{{ url_for('static', filename=item.image_path) }}" 
+                                 alt="Scan thumbnail" 
+                                 class="rounded-3 border object-fit-cover shadow-xs" 
+                                 style="width: 48px; height: 48px; cursor: pointer;"
+                                 data-bs-toggle="modal" 
+                                 data-bs-target="#imgModal{{ item.id }}">
+                            
+                            <!-- Thumbnail Preview Modal -->
+                            <div class="modal fade" id="imgModal{{ item.id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content rounded-4 border-0 overflow-hidden shadow">
+                                        <div class="modal-header border-0 pb-0">
+                                            <h6 class="modal-title fw-bold text-forest-dark">Scan #{{ item.id }} — {{ item.disease_name }}</h6>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body text-center p-4">
+                                            <img src="{{ url_for('static', filename=item.image_path) }}" alt="Enlarged leaf" class="img-fluid rounded-3 shadow-sm max-h-350">
+                                            <div class="mt-2 text-muted x-small">Recorded on {{ item.timestamp }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="rounded-3 bg-light border d-flex align-items-center justify-content-center text-muted" 
+                                 style="width: 48px; height: 48px;" 
+                                 title="No image saved (Privacy protected)">
+                                <i class="bi bi-shield-slash fs-5"></i>
+                            </div>
+                            {% endif %}
+                        </td>
+
+                        <!-- Timestamp -->
+                        <td class="text-muted font-monospace text-nowrap">
+                            <i class="bi bi-calendar3 me-1"></i> {{ item.timestamp }}
+                        </td>
+
+                        <!-- Crop -->
+                        <td>
+                            <span class="badge bg-subtle-green text-forest-green border fw-semibold rounded-pill px-2 py-1">
+                                {{ item.crop }}
+                            </span>
+                        </td>
+
+                        <!-- Diagnosis -->
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi {% if item.is_healthy %}bi-check-circle-fill text-success-accent{% else %}bi-exclamation-triangle-fill text-danger{% endif %}"></i>
+                                <span class="fw-semibold {% if item.is_healthy %}text-forest-dark{% else %}text-danger{% endif %}">
+                                    {{ item.disease_name }}
+                                </span>
+                            </div>
+                            <span class="text-muted x-small font-monospace">{{ item.raw_class }}</span>
+                        </td>
+
+                        <!-- Confidence -->
+                        <td>
+                            <div class="d-flex align-items-center gap-2" style="max-width: 130px;">
+                                <div class="progress flex-grow-1" style="height: 6px; border-radius: 4px;">
+                                    <div class="progress-bar {% if item.confidence >= 0.85 %}bg-forest-primary{% elif item.confidence >= 0.70 %}bg-success-accent{% else %}bg-warning{% endif %}" 
+                                         role="progressbar" 
+                                         style="width: {{ item.confidence_percent }};" 
+                                         aria-valuenow="{{ item.confidence * 100 }}" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                    </div>
+                                </div>
+                                <span class="fw-bold x-small text-forest-dark">{{ item.confidence_percent }}</span>
+                            </div>
+                        </td>
+
+                        <!-- Delete Action (Protected POST) -->
+                        <td class="text-end pe-4">
+                            <form method="POST" action="{{ url_for('delete_history_record', record_id=item.id) }}" class="d-inline" onsubmit="return confirm('Delete prediction record #{{ item.id }}? This action cannot be undone.');">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle p-1" title="Delete record" style="width: 32px; height: 32px;">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <!-- Empty State -->
+    <div class="card border-0 shadow-sm rounded-4 p-5 bg-white text-center">
+        <div class="icon-circle bg-subtle-green text-forest-green mx-auto mb-3" style="width: 72px; height: 72px; border-radius: 50%;">
+            <i class="bi bi-journal-x fs-2"></i>
+        </div>
+        <h4 class="fw-bold text-forest-dark mb-2">No Prediction Records Found</h4>
+        <p class="text-muted small max-w-500 mx-auto mb-4">
+            {% if current_crop != 'all' or current_status != 'all' %}
+            No records matched your selected filters. Try resetting the filters to view all past scans.
+            {% else %}
+            You haven't scanned any leaves yet. Upload and analyze a leaf photo in the Diagnostic Portal to record predictions here.
+            {% endif %}
+        </p>
+        <div>
+            {% if current_crop != 'all' or current_status != 'all' %}
+            <a href="{{ url_for('history') }}" class="btn btn-outline-forest rounded-pill px-4 py-2 me-2">
+                <i class="bi bi-arrow-repeat me-1"></i> Reset Filters
+            </a>
+            {% endif %}
+            <a href="{{ url_for('predict') }}" class="btn btn-forest-primary rounded-pill px-4 py-2">
+                <i class="bi bi-camera me-1"></i> Scan a Leaf Now
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- Clear All History Confirmation Modal -->
+<div class="modal fade" id="clearAllModal" tabindex="-1" aria-labelledby="clearAllModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header bg-danger text-white border-0">
+                <h5 class="modal-title fw-bold" id="clearAllModalLabel">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Clear All Prediction History
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <p class="text-muted mb-3">
+                    Are you sure you want to permanently delete <strong>all prediction records</strong> and associated stored leaf photos?
+                </p>
+                <div class="alert alert-warning small text-start border-0 rounded-3 mb-0">
+                    <i class="bi bi-info-circle-fill me-1"></i> This action cannot be reversed. Future analytics will reset until new scans are performed.
+                </div>
+            </div>
+            <div class="modal-footer border-0 p-3 justify-content-center">
+                <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                <form method="POST" action="{{ url_for('clear_history') }}" class="d-inline">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-danger rounded-pill px-4">
+                        <i class="bi bi-trash3-fill me-1"></i> Yes, Clear All
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

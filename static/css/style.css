@@ -1,0 +1,469 @@
+/* ==========================================================================
+   PlantCare AI — Modern UI/UX Stylesheet
+   Theme: Agricultural Green & Pure White Modern Aesthetic
+   Author: vivek kumar (MCA Minor Project)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   CSS Variables & Design Tokens
+   -------------------------------------------------------------------------- */
+:root {
+    /* Primary Agricultural Palette */
+    --forest-dark: #1b4332;
+    /* Deep evergreen for headings & hero accents */
+    --forest-primary: #2d6a4f;
+    /* Primary brand action green */
+    --forest-hover: #1e4b37;
+    /* Hover state for buttons */
+    --success-accent: #40916c;
+    /* Vivid leaf green accent */
+    --mint-accent: #74c69d;
+    /* Soft mint for badges and highlights */
+    --mint-subtle: #95d5b2;
+    /* Subtle mint for borders */
+    --mint-light: #d8f3dc;
+    /* Pale mint card backgrounds */
+    --subtle-green: #e8f5e9;
+    /* Ultra soft green container fills */
+
+    /* Neutral & Background Palette */
+    --bg-app-light: #f8fbf9;
+    /* Very soft warm off-white app background */
+    --card-bg: #ffffff;
+    /* Crisp white for elevated cards */
+    --text-primary: #1e293b;
+    /* High contrast slate for primary body */
+    --text-muted: #64748b;
+    /* Balanced grey for secondary descriptions */
+    --border-soft: #e2e8f0;
+    /* Delicate card borders */
+
+    /* Typography */
+    --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+    /* Transitions & Shadows */
+    --transition-fast: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    --shadow-soft: 0 4px 20px -2px rgba(27, 67, 50, 0.06);
+    --shadow-elevated: 0 12px 30px -4px rgba(27, 67, 50, 0.12);
+}
+
+/* --------------------------------------------------------------------------
+   Global Resets & Base Typography
+   -------------------------------------------------------------------------- */
+html,
+body {
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    background-color: var(--bg-app-light);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-heading {
+    font-family: var(--font-heading);
+    letter-spacing: -0.02em;
+}
+
+a {
+    transition: var(--transition-fast);
+}
+
+/* --------------------------------------------------------------------------
+   Utility Classes & Color Overrides
+   -------------------------------------------------------------------------- */
+.bg-app-light {
+    background-color: var(--bg-app-light) !important;
+}
+
+.text-forest-dark {
+    color: var(--forest-dark) !important;
+}
+
+.text-forest-green {
+    color: var(--forest-primary) !important;
+}
+
+.text-success-accent {
+    color: var(--success-accent) !important;
+}
+
+.text-mint-accent {
+    color: var(--mint-accent) !important;
+}
+
+.text-mint-subtle {
+    color: var(--mint-subtle) !important;
+}
+
+.bg-subtle-green {
+    background-color: var(--subtle-green) !important;
+}
+
+.bg-mint-light {
+    background-color: var(--mint-light) !important;
+}
+
+.bg-forest-dark {
+    background-color: var(--forest-dark) !important;
+}
+
+.border-forest-darker {
+    border-color: #143225 !important;
+}
+
+.bg-forest-gradient {
+    background: linear-gradient(135deg, var(--forest-dark) 0%, var(--forest-primary) 100%) !important;
+}
+
+.text-gradient-green {
+    background: linear-gradient(135deg, var(--forest-dark) 0%, var(--success-accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.max-w-600 {
+    max-width: 600px;
+}
+
+.max-w-700 {
+    max-width: 700px;
+}
+
+.max-w-800 {
+    max-width: 800px;
+}
+
+.max-w-900 {
+    max-width: 900px;
+}
+
+.max-h-160 {
+    max-height: 160px;
+}
+
+.max-h-250 {
+    max-height: 250px;
+}
+
+.x-small {
+    font-size: 0.8rem;
+}
+
+.tracking-wider {
+    letter-spacing: 0.08em;
+}
+
+/* --------------------------------------------------------------------------
+   Navbar & Brand Styling
+   -------------------------------------------------------------------------- */
+.navbar {
+    border-bottom: 1px solid rgba(45, 106, 79, 0.08);
+}
+
+.navbar-brand .brand-title {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    color: var(--forest-dark);
+}
+
+.phase-badge {
+    font-size: 0.72rem;
+    padding: 0.25rem 0.6rem;
+    font-weight: 600;
+}
+
+.nav-link {
+    color: #4b5563;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border-radius: 999px;
+    transition: var(--transition-fast);
+}
+
+.nav-link:hover {
+    color: var(--forest-primary) !important;
+    background-color: var(--subtle-green);
+}
+
+.nav-link.active {
+    background-color: var(--subtle-green);
+}
+
+/* --------------------------------------------------------------------------
+   Custom Button Themes
+   -------------------------------------------------------------------------- */
+.btn-forest-primary {
+    background-color: var(--forest-primary);
+    border-color: var(--forest-primary);
+    color: #ffffff;
+    font-weight: 600;
+    transition: var(--transition-fast);
+}
+
+.btn-forest-primary:hover,
+.btn-forest-primary:focus {
+    background-color: var(--forest-hover);
+    border-color: var(--forest-hover);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(45, 106, 79, 0.25);
+}
+
+.btn-forest-primary:active {
+    transform: translateY(0);
+}
+
+.btn-outline-forest {
+    border: 1.5px solid var(--forest-primary);
+    color: var(--forest-primary);
+    font-weight: 600;
+    background: transparent;
+    transition: var(--transition-fast);
+}
+
+.btn-outline-forest:hover,
+.btn-outline-forest:focus {
+    background-color: var(--forest-primary);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(45, 106, 79, 0.15);
+}
+
+/* --------------------------------------------------------------------------
+   Hero Section & Visual Badges
+   -------------------------------------------------------------------------- */
+.hero-section {
+    background: radial-gradient(circle at 80% 20%, rgba(216, 243, 220, 0.45) 0%, rgba(248, 251, 249, 0) 70%);
+}
+
+.hero-image-wrapper {
+    position: relative;
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.hero-svg-illustration {
+    filter: drop-shadow(0 16px 24px rgba(27, 67, 50, 0.08));
+    animation: floatPlant 6s ease-in-out infinite alternate;
+}
+
+@keyframes floatPlant {
+    0% {
+        transform: translateY(0px);
+    }
+
+    100% {
+        transform: translateY(-8px);
+    }
+}
+
+.floating-badge {
+    position: absolute;
+    z-index: 2;
+    transition: var(--transition-smooth);
+}
+
+.floating-badge:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-elevated) !important;
+}
+
+.badge-top-right {
+    top: 10%;
+    right: -10px;
+}
+
+.badge-bottom-left {
+    bottom: 8%;
+    left: -15px;
+}
+
+/* Icon circles */
+.icon-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-circle-sm {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-circle-xs {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   How It Works Step Cards
+   -------------------------------------------------------------------------- */
+.step-card {
+    border: 1px solid rgba(45, 106, 79, 0.08) !important;
+    position: relative;
+}
+
+.step-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-elevated) !important;
+    border-color: var(--mint-accent) !important;
+}
+
+.step-number-bubble {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: var(--subtle-green);
+    color: var(--forest-primary);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.step-icon-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.active-step-card {
+    border-color: var(--success-accent) !important;
+    background-color: #fcfdfc;
+}
+
+/* --------------------------------------------------------------------------
+   Feature Cards
+   -------------------------------------------------------------------------- */
+.feature-card {
+    border: 1px solid rgba(45, 106, 79, 0.08) !important;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-elevated) !important;
+    border-color: var(--mint-accent) !important;
+}
+
+.feature-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   Drag and Drop Upload Area
+   -------------------------------------------------------------------------- */
+.upload-dropzone {
+    background-color: #fafdfb;
+    border-color: #b7e4c7;
+    cursor: pointer;
+    position: relative;
+    outline: none;
+}
+
+.upload-dropzone:hover,
+.upload-dropzone:focus-visible {
+    background-color: var(--subtle-green);
+    border-color: var(--forest-primary);
+}
+
+.upload-dropzone.drag-active {
+    background-color: #d8f3dc;
+    border-color: var(--forest-primary);
+    transform: scale(1.01);
+    box-shadow: 0 8px 24px rgba(45, 106, 79, 0.15);
+}
+
+.dropzone-svg-icon {
+    transition: var(--transition-smooth);
+}
+
+.upload-dropzone:hover .dropzone-svg-icon,
+.upload-dropzone.drag-active .dropzone-svg-icon {
+    transform: scale(1.08) rotate(-3deg);
+}
+
+/* --------------------------------------------------------------------------
+   CNN Diagram & Visual Elements
+   -------------------------------------------------------------------------- */
+.cnn-pipeline-svg {
+    max-height: 220px;
+    width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   Footer Styles
+   -------------------------------------------------------------------------- */
+.footer-link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+.footer-link:hover {
+    color: var(--mint-accent);
+    padding-left: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Accessibility & Focus Outlines
+   -------------------------------------------------------------------------- */
+:focus-visible {
+    outline: 2.5px solid var(--success-accent);
+    outline-offset: 2px;
+}
+
+/* Smooth transitions helper */
+.transition-all {
+    transition: var(--transition-smooth);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Adaptations
+   -------------------------------------------------------------------------- */
+@media (max-width: 991.98px) {
+    .floating-badge {
+        display: none !important;
+    }
+
+    .hero-image-wrapper {
+        max-width: 380px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .display-4 {
+        font-size: 2.2rem;
+    }
+
+    .upload-dropzone {
+        padding: 2rem 1rem !important;
+    }
+}

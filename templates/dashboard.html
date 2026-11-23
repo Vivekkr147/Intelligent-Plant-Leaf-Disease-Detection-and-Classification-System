@@ -1,0 +1,421 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics Dashboard — PlantCare AI{% endblock %}
+
+{% block content %}
+<div class="container py-4 py-lg-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{{ url_for('home') }}" class="text-decoration-none text-forest-green"><i class="bi bi-house-door"></i> Home</a></li>
+            <li class="breadcrumb-item active text-muted" aria-current="page">Analytics Dashboard</li>
+        </ol>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <span class="badge rounded-pill bg-subtle-green text-forest-green px-3 py-1 mb-2 border border-success-subtle fw-semibold">
+                <i class="bi bi-graph-up-arrow text-success-accent me-1"></i> Phase 4 Live Analytics
+            </span>
+            <h2 class="fw-bold font-heading text-forest-dark mb-1">Diagnostic Analytics &amp; Trends</h2>
+            <p class="text-muted small mb-0">
+                Real-time metrics, class distributions, and health statistics computed strictly from database prediction records.
+            </p>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <a href="{{ url_for('history') }}" class="btn btn-outline-forest rounded-pill px-3 py-2 small fw-semibold">
+                <i class="bi bi-clock-history me-1"></i> View Scan History
+            </a>
+            <a href="{{ url_for('predict') }}" class="btn btn-forest-primary rounded-pill px-3 py-2 small fw-semibold">
+                <i class="bi bi-camera-fill me-1"></i> Scan Leaf Now
+            </a>
+        </div>
+    </div>
+
+    {% if stats.total_scans > 0 %}
+    <!-- KPI Counters Grid -->
+    <div class="row g-3 mb-4">
+        <!-- 1. Total Scans -->
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span class="text-muted x-small text-uppercase fw-bold letter-spacing-1">Total Scans</span>
+                    <div class="icon-circle-xs bg-subtle-green text-forest-green">
+                        <i class="bi bi-camera-fill"></i>
+                    </div>
+                </div>
+                <h2 class="fw-bold text-forest-dark mb-1 font-heading">{{ stats.total_scans }}</h2>
+                <div class="text-muted x-small">
+                    <i class="bi bi-database text-forest-green me-1"></i> Verified SQLite Records
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Healthy Foliage -->
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span class="text-muted x-small text-uppercase fw-bold letter-spacing-1">Healthy Foliage</span>
+                    <div class="icon-circle-xs bg-subtle-green text-success-accent">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                </div>
+                <h2 class="fw-bold text-success-accent mb-1 font-heading">{{ stats.healthy_count }}</h2>
+                <div class="text-muted x-small">
+                    <strong>{{ stats.healthy_percent }}%</strong> of total analyzed scans
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Diseased Foliage -->
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span class="text-muted x-small text-uppercase fw-bold letter-spacing-1">Infected Leaves</span>
+                    <div class="icon-circle-xs bg-subtle-green text-danger">
+                        <i class="bi bi-exclamation-diamond-fill"></i>
+                    </div>
+                </div>
+                <h2 class="fw-bold text-danger mb-1 font-heading">{{ stats.diseased_count }}</h2>
+                <div class="text-muted x-small">
+                    <strong>{{ stats.diseased_percent }}%</strong> infection detection rate
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Average Confidence -->
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span class="text-muted x-small text-uppercase fw-bold letter-spacing-1">Avg Confidence</span>
+                    <div class="icon-circle-xs bg-subtle-green text-forest-green">
+                        <i class="bi bi-cpu-fill"></i>
+                    </div>
+                </div>
+                <h2 class="fw-bold text-forest-dark mb-1 font-heading">{{ stats.avg_confidence }}%</h2>
+                <div class="text-muted x-small">
+                    <i class="bi bi-shield-check text-success-accent me-1"></i> MobileNetV2 Softmax Average
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js Visualizations Grid -->
+    <div class="row g-4 mb-4">
+        <!-- Chart 1: Health Ratio Doughnut Chart -->
+        <div class="col-lg-4 col-md-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h6 class="fw-bold text-forest-dark mb-0">
+                        <i class="bi bi-pie-chart-fill text-forest-green me-2"></i>Foliage Health Ratio
+                    </h6>
+                    <span class="badge bg-light text-muted border small">Overall</span>
+                </div>
+                <div class="position-relative" style="height: 240px;">
+                    <canvas id="healthRatioChart"></canvas>
+                </div>
+                <div class="d-flex justify-content-around text-center pt-3 border-top mt-3 small text-muted">
+                    <div>
+                        <span class="d-inline-block rounded-circle me-1" style="width: 10px; height: 10px; background-color: #52b788;"></span>
+                        Healthy: <strong>{{ stats.healthy_count }}</strong>
+                    </div>
+                    <div>
+                        <span class="d-inline-block rounded-circle me-1" style="width: 10px; height: 10px; background-color: #e76f51;"></span>
+                        Infected: <strong>{{ stats.diseased_count }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart 2: Crop Distribution Pie / Bar Chart -->
+        <div class="col-lg-4 col-md-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h6 class="fw-bold text-forest-dark mb-0">
+                        <i class="bi bi-grid-fill text-forest-green me-2"></i>Scans by Crop
+                    </h6>
+                    <span class="badge bg-light text-muted border small">Crop Split</span>
+                </div>
+                <div class="position-relative" style="height: 240px;">
+                    <canvas id="cropDistributionChart"></canvas>
+                </div>
+                <div class="d-flex justify-content-around text-center pt-3 border-top mt-3 small text-muted">
+                    {% for crop, count in stats.crop_distribution.items() %}
+                    <div>
+                        {{ crop }}: <strong>{{ count }}</strong>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart 3: Scan Timeline Activity -->
+        <div class="col-lg-4 col-md-12">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h6 class="fw-bold text-forest-dark mb-0">
+                        <i class="bi bi-activity text-forest-green me-2"></i>Daily Scan Activity
+                    </h6>
+                    <span class="badge bg-light text-muted border small">Recent Days</span>
+                </div>
+                <div class="position-relative" style="height: 240px;">
+                    <canvas id="dailyActivityChart"></canvas>
+                </div>
+                <div class="text-center pt-3 border-top mt-3 small text-muted">
+                    <i class="bi bi-calendar-event me-1"></i> Scan volume over recent active dates
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart 4: Full Class Distribution Across All 7 Conditions -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <div>
+                <h6 class="fw-bold text-forest-dark mb-1">
+                    <i class="bi bi-bar-chart-fill text-forest-green me-2"></i>Predicted Class Distribution (All 7 Classes)
+                </h6>
+                <p class="text-muted x-small mb-0">Distribution of real model classifications stored in the local SQLite database.</p>
+            </div>
+            <span class="badge bg-subtle-green text-forest-green border">MobileNetV2 Predictions</span>
+        </div>
+        <div class="position-relative" style="height: 280px;">
+            <canvas id="classDistributionChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Recent Diagnostic Activity Table -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+        <div class="p-4 border-bottom d-flex justify-content-between align-items-center">
+            <div>
+                <h6 class="fw-bold text-forest-dark mb-0">Recent Diagnostic Scans</h6>
+                <small class="text-muted">Most recent predictions recorded by the inference engine</small>
+            </div>
+            <a href="{{ url_for('history') }}" class="btn btn-sm btn-outline-forest rounded-pill px-3">
+                View All Scans <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 small">
+                <thead class="table-light text-muted text-uppercase x-small">
+                    <tr>
+                        <th class="ps-4 py-3">ID</th>
+                        <th>Timestamp</th>
+                        <th>Crop</th>
+                        <th>Predicted Condition</th>
+                        <th>Confidence</th>
+                        <th class="pe-4 text-end">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for scan in stats.recent_scans %}
+                    <tr>
+                        <td class="ps-4 fw-bold text-muted font-monospace">#{{ scan.id }}</td>
+                        <td class="text-muted font-monospace">{{ scan.timestamp }}</td>
+                        <td>
+                            <span class="badge bg-subtle-green text-forest-green border rounded-pill px-2 py-1">
+                                {{ scan.crop }}
+                            </span>
+                        </td>
+                        <td class="fw-semibold text-forest-dark">{{ scan.disease_name }}</td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2" style="max-width: 110px;">
+                                <div class="progress flex-grow-1" style="height: 6px; border-radius: 4px;">
+                                    <div class="progress-bar {% if scan.confidence >= 0.85 %}bg-forest-primary{% elif scan.confidence >= 0.70 %}bg-success-accent{% else %}bg-warning{% endif %}" 
+                                         style="width: {{ scan.confidence_percent }};">
+                                    </div>
+                                </div>
+                                <span class="fw-bold x-small">{{ scan.confidence_percent }}</span>
+                            </div>
+                        </td>
+                        <td class="pe-4 text-end">
+                            {% if scan.is_healthy %}
+                            <span class="badge bg-success-accent text-white rounded-pill px-2 py-1"><i class="bi bi-check2"></i> Healthy</span>
+                            {% else %}
+                            <span class="badge bg-danger text-white rounded-pill px-2 py-1"><i class="bi bi-virus"></i> Infected</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% else %}
+    <!-- Empty State when no scans recorded yet -->
+    <div class="card border-0 shadow-sm rounded-4 p-5 bg-white text-center">
+        <div class="icon-circle bg-subtle-green text-forest-green mx-auto mb-3" style="width: 72px; height: 72px; border-radius: 50%;">
+            <i class="bi bi-pie-chart fs-2"></i>
+        </div>
+        <h4 class="fw-bold text-forest-dark mb-2">No Diagnostic Data Available Yet</h4>
+        <p class="text-muted small max-w-500 mx-auto mb-4">
+            The analytics engine requires at least one completed leaf scan. As you upload and evaluate leaves, this dashboard will visualize healthy versus diseased ratios, class distributions, and activity trends in real time.
+        </p>
+        <div>
+            <a href="{{ url_for('predict') }}" class="btn btn-forest-primary rounded-pill px-4 py-2">
+                <i class="bi bi-camera me-1"></i> Scan First Leaf
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- Chart.js 4.4 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+{% if stats.total_scans > 0 %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Brand Colors Palette
+    const colors = {
+        forestDark: '#1b4332',
+        forestPrimary: '#2d6a4f',
+        successAccent: '#40916c',
+        mintAccent: '#74c69d',
+        mintLight: '#d8f3dc',
+        danger: '#e63946',
+        warning: '#f4a261',
+        info: '#457b9d',
+        grey: '#94a3b8'
+    };
+
+    // 1. Health Ratio Doughnut Chart
+    const healthCtx = document.getElementById('healthRatioChart');
+    if (healthCtx) {
+        new Chart(healthCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Healthy Foliage', 'Infected Leaves'],
+                datasets: [{
+                    data: [{{ stats.healthy_count }}, {{ stats.diseased_count }}],
+                    backgroundColor: ['#52b788', '#e76f51'],
+                    hoverOffset: 6,
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { boxWidth: 12, font: { size: 12 } }
+                    }
+                },
+                cutout: '68%'
+            }
+        });
+    }
+
+    // 2. Crop Distribution Pie/Doughnut Chart
+    const cropCtx = document.getElementById('cropDistributionChart');
+    if (cropCtx) {
+        const cropLabels = {{ stats.crop_distribution.keys() | list | tojson }};
+        const cropCounts = {{ stats.crop_distribution.values() | list | tojson }};
+        new Chart(cropCtx, {
+            type: 'pie',
+            data: {
+                labels: cropLabels,
+                datasets: [{
+                    data: cropCounts,
+                    backgroundColor: ['#2d6a4f', '#74c69d', '#b7e4c7'],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { boxWidth: 12, font: { size: 12 } }
+                    }
+                }
+            }
+        });
+    }
+
+    // 3. Daily Activity Trend Line Chart
+    const dailyCtx = document.getElementById('dailyActivityChart');
+    if (dailyCtx) {
+        const dailyLabels = {{ stats.daily_activity | map(attribute='date') | list | tojson }};
+        const dailyCounts = {{ stats.daily_activity | map(attribute='count') | list | tojson }};
+        new Chart(dailyCtx, {
+            type: 'line',
+            data: {
+                labels: dailyLabels,
+                datasets: [{
+                    label: 'Leaf Scans',
+                    data: dailyCounts,
+                    borderColor: '#2d6a4f',
+                    backgroundColor: 'rgba(45, 106, 79, 0.1)',
+                    fill: true,
+                    tension: 0.35,
+                    pointBackgroundColor: '#2d6a4f',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1, precision: 0 }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    }
+
+    // 4. All 7 Classes Distribution Bar Chart
+    const classCtx = document.getElementById('classDistributionChart');
+    if (classCtx) {
+        const classLabels = {{ stats.class_distribution.keys() | list | tojson }};
+        const classCounts = {{ stats.class_distribution.values() | list | tojson }};
+        
+        // Dynamic colors: healthy classes green, diseases coral/orange
+        const bgColors = classLabels.map(label => 
+            label.toLowerCase().includes('healthy') ? '#52b788' : '#e76f51'
+        );
+
+        new Chart(classCtx, {
+            type: 'bar',
+            data: {
+                labels: classLabels,
+                datasets: [{
+                    label: 'Scan Count',
+                    data: classCounts,
+                    backgroundColor: bgColors,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y', // Horizontal bars for clean class name readability
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1, precision: 0 }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    }
+});
+</script>
+{% endif %}
+{% endblock %}

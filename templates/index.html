@@ -1,0 +1,317 @@
+{% extends "base.html" %}
+
+{% block title %}PlantCare AI — Protect Your Plants with the Power of AI{% endblock %}
+
+{% block content %}
+<!-- ======================================================================= -->
+<!-- Hero Section                                                            -->
+<!-- ======================================================================= -->
+<section class="hero-section py-5 position-relative overflow-hidden">
+    <div class="container py-lg-4">
+        <div class="row align-items-center g-5">
+            <!-- Hero Text Content -->
+            <div class="col-lg-6 text-center text-lg-start">
+                <div
+                    class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-subtle-green border border-success-subtle text-forest-green small fw-semibold mb-3 animate-fade-in">
+                    <i class="bi bi-patch-check-fill text-success-accent"></i>
+                    <span>MCA Minor Project • Phase 1 Architecture</span>
+                </div>
+
+                <h1 class="display-4 fw-bold font-heading text-forest-dark mb-3 leading-tight">
+                    Protect Your Plants with the <span class="text-gradient-green">Power of AI</span>
+                </h1>
+
+                <p class="lead text-muted mb-4 fs-5 pe-lg-3">
+                    PlantCare AI is an intelligent diagnostic system designed to detect and classify plant leaf diseases
+                    at their earliest stages. Empowering farmers, agronomists, and home gardeners to safeguard crop
+                    yields with precision deep learning.
+                </p>
+
+                <!-- Hero Call to Action Buttons -->
+                <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-lg-start gap-3 mb-4">
+                    <a href="{{ url_for('predict') }}"
+                        class="btn btn-forest-primary btn-lg rounded-pill px-4 py-3 d-inline-flex align-items-center justify-content-center gap-2 shadow-sm">
+                        <i class="bi bi-camera-fill"></i>
+                        <span>Detect Plant Disease</span>
+                    </a>
+                    <a href="{{ url_for('about') }}"
+                        class="btn btn-outline-forest btn-lg rounded-pill px-4 py-3 d-inline-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-cpu"></i>
+                        <span>Explore AI Architecture</span>
+                    </a>
+                </div>
+
+                <!-- Quick Highlights -->
+                <div class="row g-3 pt-2 text-start">
+                    <div class="col-4">
+                        <div class="border-start border-3 border-success-accent ps-3">
+                            <h4 class="fw-bold mb-0 text-forest-dark">38+</h4>
+                            <small class="text-muted">Target Disease Classes (Phase 2)</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="border-start border-3 border-success-accent ps-3">
+                            <h4 class="fw-bold mb-0 text-forest-dark">&lt; 1 sec</h4>
+                            <small class="text-muted">Fast Validation Pipeline</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="border-start border-3 border-success-accent ps-3">
+                            <h4 class="fw-bold mb-0 text-forest-dark">100%</h4>
+                            <small class="text-muted">Safe & Secure Image Checks</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Visual Graphic -->
+            <div class="col-lg-6 text-center position-relative">
+                <div class="hero-image-wrapper p-3 position-relative">
+                    <img src="{{ url_for('static', filename='images/hero-plant.svg') }}"
+                        alt="PlantCare AI Leaf Scan Illustration" class="img-fluid hero-svg-illustration">
+
+                    <!-- Floating Feature Card 1 -->
+                    <div
+                        class="floating-badge badge-top-right bg-white p-3 rounded-4 shadow-sm border border-light text-start d-none d-md-flex align-items-center gap-3">
+                        <div class="icon-circle bg-subtle-green text-forest-green">
+                            <i class="bi bi-shield-check fs-4"></i>
+                        </div>
+                        <div>
+                            <span class="d-block fw-bold small text-forest-dark">Strict Validation</span>
+                            <small class="text-muted">Pillow MIME & Corrupt Checks</small>
+                        </div>
+                    </div>
+
+                    <!-- Floating Feature Card 2 -->
+                    <div
+                        class="floating-badge badge-bottom-left bg-white p-3 rounded-4 shadow-sm border border-light text-start d-none d-md-flex align-items-center gap-3">
+                        <div class="icon-circle bg-mint-light text-forest-dark">
+                            <i class="bi bi-layers-fill fs-4"></i>
+                        </div>
+                        <div>
+                            <span class="d-block fw-bold small text-forest-dark">MobileNetV2 Ready</span>
+                            <small class="text-muted">224×224 CNN Architecture</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================================================================= -->
+<!-- How It Works Section (3 Distinct Steps)                                 -->
+<!-- ======================================================================= -->
+<section class="py-5 bg-white border-top border-bottom border-light-subtle">
+    <div class="container py-4">
+        <div class="text-center max-w-700 mx-auto mb-5">
+            <span class="text-uppercase text-success-accent fw-bold small tracking-wider d-block mb-2">Simple 3-Step
+                Workflow</span>
+            <h2 class="fw-bold font-heading text-forest-dark mb-3">How PlantCare AI Operates</h2>
+            <p class="text-muted lead fs-6">
+                Designed for simplicity in agricultural environments: upload a clear leaf photograph, verify image
+                integrity, and prepare for instant deep-learning diagnosis.
+            </p>
+        </div>
+
+        <div class="row g-4 position-relative">
+            <!-- Step 1 -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 p-4 text-center step-card transition-all">
+                    <div class="step-number-bubble mb-3 mx-auto">1</div>
+                    <div class="step-icon-box mb-3 mx-auto bg-subtle-green text-forest-green">
+                        <i class="bi bi-camera fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold text-forest-dark mb-2">Capture & Upload Leaf</h5>
+                    <p class="text-muted small mb-0">
+                        Take a clear photo of an infected or healthy plant leaf and upload it in JPG or PNG format (up
+                        to 5 MB) using our responsive drag-and-drop portal.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="col-md-4">
+                <div
+                    class="card h-100 border-0 shadow-sm rounded-4 p-4 text-center step-card transition-all active-step-card">
+                    <div class="step-number-bubble mb-3 mx-auto bg-forest-primary text-white">2</div>
+                    <div class="step-icon-box mb-3 mx-auto bg-mint-light text-forest-dark">
+                        <i class="bi bi-shield-lock-fill fs-3"></i>
+                    </div>
+                    <div class="d-inline-block badge bg-success-accent text-white px-2 py-1 rounded-pill small mb-2">
+                        Phase 1 Active</div>
+                    <h5 class="fw-bold text-forest-dark mb-2">Validation & Preprocessing</h5>
+                    <p class="text-muted small mb-0">
+                        Our Python Flask backend and Pillow pipeline inspect the image structure, sanitize filenames,
+                        verify color channels, and prepare normalized tensor dimensions.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 p-4 text-center step-card transition-all">
+                    <div class="step-number-bubble mb-3 mx-auto">3</div>
+                    <div class="step-icon-box mb-3 mx-auto bg-subtle-green text-forest-green">
+                        <i class="bi bi-cpu-fill fs-3"></i>
+                    </div>
+                    <div class="d-inline-block badge bg-secondary text-white px-2 py-1 rounded-pill small mb-2">Phase 2
+                        Target</div>
+                    <h5 class="fw-bold text-forest-dark mb-2">Deep Learning Diagnosis</h5>
+                    <p class="text-muted small mb-0">
+                        In Phase 2, our trained MobileNetV2 CNN model will classify the specific disease, calculate
+                        confidence, and provide actionable organic treatment advice.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="{{ url_for('predict') }}" class="btn btn-forest-primary rounded-pill px-4 py-2">
+                <i class="bi bi-arrow-right-circle me-1"></i> Try the Image Upload Pipeline Now
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ======================================================================= -->
+<!-- Features Section                                                        -->
+<!-- ======================================================================= -->
+<section class="py-5 bg-app-light">
+    <div class="container py-4">
+        <div class="text-center max-w-700 mx-auto mb-5">
+            <span class="text-uppercase text-success-accent fw-bold small tracking-wider d-block mb-2">Intelligent
+                Capabilities</span>
+            <h2 class="fw-bold font-heading text-forest-dark mb-3">Engineered for Accuracy & Usability</h2>
+            <p class="text-muted lead fs-6">
+                PlantCare AI combines modern web engineering with state-of-the-art computer vision to serve farmers with
+                reliable, real-time crop health monitoring.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Feature 1 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 p-4 feature-card transition-all bg-white">
+                    <div class="feature-icon mb-3 bg-subtle-green text-forest-green">
+                        <i class="bi bi-heart-pulse-fill fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold text-forest-dark mb-2">Early Pathogen Detection</h5>
+                    <p class="text-muted small mb-0">
+                        Diagnose fungal spots, bacterial blights, and viral mosaic patterns before physical infection
+                        spreads across large crop acreage.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 p-4 feature-card transition-all bg-white">
+                    <div class="feature-icon mb-3 bg-subtle-green text-forest-green">
+                        <i class="bi bi-diagram-3-fill fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold text-forest-dark mb-2">Convolutional Neural Networks</h5>
+                    <p class="text-muted small mb-0">
+                        Trained on hierarchical feature extractors that detect microscopic leaf texture variances,
+                        chlorosis rings, and vein necrosis.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 p-4 feature-card transition-all bg-white">
+                    <div class="feature-icon mb-3 bg-subtle-green text-forest-green">
+                        <i class="bi bi-lightning-charge-fill fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold text-forest-dark mb-2">MobileNetV2 Lightweight AI</h5>
+                    <p class="text-muted small mb-0">
+                        Inverted residual blocks and depthwise convolutions ensure lightweight memory usage and
+                        sub-second classification speed.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 p-4 feature-card transition-all bg-white">
+                    <div class="feature-icon mb-3 bg-subtle-green text-forest-green">
+                        <i class="bi bi-shield-check fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold text-forest-dark mb-2">Safe Multi-Tier Validation</h5>
+                    <p class="text-muted small mb-0">
+                        Equipped with safe file size limits (5 MB), Pillow image integrity verification, and extension
+                        whitelisting to prevent exploits.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 p-4 feature-card transition-all bg-white">
+                    <div class="feature-icon mb-3 bg-subtle-green text-forest-green">
+                        <i class="bi bi-phone-fill fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold text-forest-dark mb-2">100% Mobile Responsive</h5>
+                    <p class="text-muted small mb-0">
+                        Fully optimized for handheld smartphones in rural field scenarios as well as high-resolution
+                        desktop agronomy labs.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 p-4 feature-card transition-all bg-white">
+                    <div class="feature-icon mb-3 bg-subtle-green text-forest-green">
+                        <i class="bi bi-journal-medical fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold text-forest-dark mb-2">Actionable Organic Advice</h5>
+                    <p class="text-muted small mb-0">
+                        Future release pairs each detected leaf condition with organic remedies, chemical
+                        recommendations, and prevention practices.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================================================================= -->
+<!-- About Project Preview Callout                                            -->
+<!-- ======================================================================= -->
+<section class="py-5 bg-white">
+    <div class="container py-4">
+        <div class="card border-0 rounded-4 bg-forest-gradient text-white p-4 p-lg-5 shadow">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-8">
+                    <span class="badge bg-white text-forest-green rounded-pill px-3 py-1 fw-bold small mb-3">Academic
+                        Context</span>
+                    <h3 class="fw-bold font-heading mb-3">Bridging Academic AI with Sustainable Agriculture</h3>
+                    <p class="text-white-75 mb-4 lead fs-6">
+                        Developed as an MCA University Minor Project by vivek kumar, PlantCare AI addresses global crop
+                        loss by delivering accessible machine learning tools to farmers. Discover our deep learning
+                        pipeline, MobileNetV2 architecture, and Phase 2 training roadmap.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="{{ url_for('about') }}"
+                            class="btn btn-light rounded-pill px-4 py-2 text-forest-green fw-semibold shadow-sm">
+                            <i class="bi bi-book-half me-1"></i> Read Project Documentation
+                        </a>
+                        <a href="{{ url_for('contact') }}" class="btn btn-outline-light rounded-pill px-4 py-2">
+                            <i class="bi bi-mortarboard me-1"></i> University Project Details
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-center d-none d-lg-block">
+                    <div class="p-4 rounded-4 bg-white bg-opacity-10 border border-white border-opacity-10">
+                        <i class="bi bi-flower2 display-3 text-mint-accent mb-2 d-block"></i>
+                        <h6 class="fw-bold mb-1">Empowering Agriculture</h6>
+                        <small class="text-white-50">Early Detection Saves Crops</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" width="100%" height="100%" fill="none">
+  <defs>
+    <linearGradient id="bgGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e8f5e9" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#c8e6c9" stop-opacity="0.2"/>
+    </linearGradient>
+    <linearGradient id="leafGreen1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#40916c"/>
+      <stop offset="100%" stop-color="#1b4332"/>
+    </linearGradient>
+    <linearGradient id="leafGreen2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#74c69d"/>
+      <stop offset="100%" stop-color="#2d6a4f"/>
+    </linearGradient>
+    <linearGradient id="potGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f8f9fa"/>
+      <stop offset="100%" stop-color="#e9ecef"/>
+    </linearGradient>
+    <linearGradient id="scanBeam" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#52b788" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#52b788" stop-opacity="0.0"/>
+    </linearGradient>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#1b4332" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <!-- Ambient background circles -->
+  <circle cx="300" cy="250" r="220" fill="url(#bgGlow)" />
+  <circle cx="160" cy="140" r="40" fill="#d8f3dc" opacity="0.5"/>
+  <circle cx="450" cy="380" r="60" fill="#d8f3dc" opacity="0.6"/>
+
+  <!-- Plant Pot / Base -->
+  <ellipse cx="300" cy="430" rx="90" ry="14" fill="#ced4da" opacity="0.6" />
+  <path d="M240 370 L255 430 Q300 440 345 430 L360 370 Z" fill="url(#potGrad)" stroke="#b7e4c7" stroke-width="2" filter="url(#softShadow)"/>
+  <ellipse cx="300" cy="370" rx="60" ry="12" fill="#52b788" opacity="0.25"/>
+
+  <!-- Central Stem -->
+  <path d="M300 370 Q302 240 295 130" stroke="#2d6a4f" stroke-width="9" stroke-linecap="round"/>
+
+  <!-- Large Left Leaf -->
+  <path d="M298 300 C210 290 140 230 130 160 C180 160 250 210 298 250 Z" fill="url(#leafGreen1)" filter="url(#softShadow)"/>
+  <path d="M298 250 Q210 200 130 160" stroke="#74c69d" stroke-width="2.5" fill="none"/>
+  <path d="M235 220 Q245 195 230 180" stroke="#74c69d" stroke-width="1.8" fill="none"/>
+  <path d="M190 195 Q200 175 185 165" stroke="#74c69d" stroke-width="1.8" fill="none"/>
+
+  <!-- Large Right Leaf -->
+  <path d="M298 260 C390 240 450 180 470 110 C410 120 340 180 298 215 Z" fill="url(#leafGreen2)" filter="url(#softShadow)"/>
+  <path d="M298 215 Q390 160 470 110" stroke="#b7e4c7" stroke-width="2.5" fill="none"/>
+  <path d="M360 180 Q350 150 370 140" stroke="#b7e4c7" stroke-width="1.8" fill="none"/>
+  <path d="M410 150 Q405 130 425 120" stroke="#b7e4c7" stroke-width="1.8" fill="none"/>
+
+  <!-- Top Center Leaf -->
+  <path d="M296 170 C270 120 280 60 295 40 C310 60 320 120 296 170 Z" fill="url(#leafGreen1)"/>
+  <path d="M295 170 L295 45" stroke="#74c69d" stroke-width="2"/>
+
+  <!-- Side small leaf -->
+  <path d="M300 325 C345 315 380 290 395 260 C365 265 330 290 300 305 Z" fill="url(#leafGreen2)"/>
+
+  <!-- AI Diagnostic Scanner Reticle around plant -->
+  <rect x="180" y="80" width="240" height="250" rx="20" stroke="#2d6a4f" stroke-width="2" stroke-dasharray="8 6" fill="url(#scanBeam)" opacity="0.85"/>
+  
+  <!-- Scanner Corners -->
+  <path d="M170 110 L170 80 L200 80" stroke="#1b4332" stroke-width="4" stroke-linecap="round"/>
+  <path d="M400 80 L430 80 L430 110" stroke="#1b4332" stroke-width="4" stroke-linecap="round"/>
+  <path d="M170 300 L170 330 L200 330" stroke="#1b4332" stroke-width="4" stroke-linecap="round"/>
+  <path d="M400 330 L430 330 L430 300" stroke="#1b4332" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Scanning Line -->
+  <line x1="175" y1="185" x2="425" y2="185" stroke="#52b788" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="425,185 415,180 415,190" fill="#2d6a4f"/>
+  <polygon points="175,185 185,180 185,190" fill="#2d6a4f"/>
+
+  <!-- Detection Badge Tag Left -->
+  <g transform="translate(60, 200)" filter="url(#softShadow)">
+    <rect width="130" height="42" rx="21" fill="#ffffff" stroke="#d8f3dc" stroke-width="1.5"/>
+    <circle cx="22" cy="21" r="9" fill="#52b788"/>
+    <path d="M18 21 L21 24 L27 18" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="38" y="20" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#1b4332">LEAF SCAN</text>
+    <text x="38" y="32" font-family="'Inter', sans-serif" font-size="9" fill="#6c757d">Deep CNN Ready</text>
+  </g>
+
+  <!-- Accuracy / AI Badge Right -->
+  <g transform="translate(410, 220)" filter="url(#softShadow)">
+    <rect width="145" height="42" rx="21" fill="#ffffff" stroke="#d8f3dc" stroke-width="1.5"/>
+    <circle cx="22" cy="21" r="9" fill="#1b4332"/>
+    <text x="18" y="25" font-family="'Inter', sans-serif" font-size="10" font-weight="bold" fill="#ffffff">AI</text>
+    <text x="38" y="20" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#1b4332">PLANT HEALTH</text>
+    <text x="38" y="32" font-family="'Inter', sans-serif" font-size="9" fill="#6c757d">Phase 1 Architecture</text>
+  </g>
+</svg>

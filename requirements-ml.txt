@@ -1,0 +1,40 @@
+# =============================================================================
+# PlantCare AI — Phase 2 Machine Learning Dependencies (Python 3.12 Compatible)
+# Intelligent Plant Leaf Disease Detection and Classification System
+# MCA University Minor Project
+# =============================================================================
+# NOTE ON PYTHON COMPATIBILITY:
+# TensorFlow on Windows officially supports Python 3.9 through 3.12.
+# Python 3.14 (used for the lightweight Flask web UI in 'venv') does not yet have
+# official pre-built wheels for TensorFlow.
+# This environment should be installed in a dedicated Python 3.12 virtual environment:
+#     py -3.12 -m venv venv-ml
+#     .\venv-ml\Scripts\Activate.ps1
+#     pip install -r requirements-ml.txt
+# =============================================================================
+
+# Core Deep Learning Framework
+tensorflow>=2.16.1,<2.18.0
+keras>=3.0.0
+
+# Numerical Matrix Computing (pinned for TensorFlow 2.16 compatibility)
+numpy>=1.26.0,<2.0.0
+
+# Image Loading, Verification & Augmentation
+Pillow>=10.2.0
+
+# Dataset Splitting, Confusion Matrix & Performance Metrics
+scikit-learn>=1.4.0
+
+# Data Visualization & Confusion Matrix Heatmap Generation
+matplotlib>=3.8.0
+seaborn>=0.13.0
+
+# Automated Testing Suite
+pytest>=8.0.0
+
+# Dataset Ingestion & Downloading Utilities
+requests>=2.31.0
+
+datasets==5.2.0
+pyarrow==25.0.1

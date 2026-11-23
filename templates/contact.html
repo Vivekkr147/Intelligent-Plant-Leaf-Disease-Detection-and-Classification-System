@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block title %}Contact & Project Information — PlantCare AI{% endblock %}
+
+{% block content %}
+<div class="container py-4 py-lg-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{{ url_for('home') }}"
+                    class="text-decoration-none text-forest-green"><i class="bi bi-house-door"></i> Home</a></li>
+            <li class="breadcrumb-item active text-muted" aria-current="page">Contact & Academic Info</li>
+        </ol>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="text-center max-w-700 mx-auto mb-5">
+        <span
+            class="badge rounded-pill bg-subtle-green text-forest-green px-3 py-1 mb-2 border border-success-subtle fw-semibold">
+            <i class="bi bi-person-workspace text-success-accent me-1"></i> Academic Contact & Inquiry
+        </span>
+        <h1 class="fw-bold font-heading text-forest-dark mb-2">Contact & Academic Information</h1>
+        <p class="text-muted lead fs-6">
+            Get in touch regarding this university minor project, explore collaboration opportunities in agricultural
+            AI, or submit feedback on our Phase 1 prototype.
+        </p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        <!-- =================================================================== -->
+        <!-- Left Column: Student & Academic Profile Cards                       -->
+        <!-- =================================================================== -->
+        <div class="col-lg-5">
+            <!-- Student Profile Card -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="icon-circle bg-subtle-green text-forest-green fs-3">
+                        <i class="bi bi-person-badge-fill"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold font-heading text-forest-dark mb-0">vivek kumar</h5>
+                        <span class="text-muted small">MCA University Student &amp; Developer</span>
+                    </div>
+                </div>
+
+                <hr class="border-light-subtle my-3">
+
+                <ul class="list-unstyled mb-0 d-flex flex-column gap-3 small">
+                    <li class="d-flex align-items-start gap-3">
+                        <div class="icon-circle-xs bg-light text-forest-green flex-shrink-0 mt-1">
+                            <i class="bi bi-mortarboard-fill"></i>
+                        </div>
+                        <div>
+                            <strong class="text-forest-dark d-block">Program of Study</strong>
+                            <span class="text-muted">Master of Computer Applications (MCA)</span>
+                        </div>
+                    </li>
+
+                    <li class="d-flex align-items-start gap-3">
+                        <div class="icon-circle-xs bg-light text-forest-green flex-shrink-0 mt-1">
+                            <i class="bi bi-folder-check"></i>
+                        </div>
+                        <div>
+                            <strong class="text-forest-dark d-block">Project Title</strong>
+                            <span class="text-muted">PlantCare AI — Intelligent Plant Leaf Disease Detection
+                                System</span>
+                        </div>
+                    </li>
+
+                    <li class="d-flex align-items-start gap-3">
+                        <div class="icon-circle-xs bg-light text-forest-green flex-shrink-0 mt-1">
+                            <i class="bi bi-geo-alt-fill"></i>
+                        </div>
+                        <div>
+                            <strong class="text-forest-dark d-block">Department &amp; University</strong>
+                            <span class="text-muted">Department of Computer Applications</span>
+                        </div>
+                    </li>
+
+                    <li class="d-flex align-items-start gap-3">
+                        <div class="icon-circle-xs bg-light text-forest-green flex-shrink-0 mt-1">
+                            <i class="bi bi-envelope-at-fill"></i>
+                        </div>
+                        <div>
+                            <strong class="text-forest-dark d-block">Academic Email</strong>
+                            <span class="text-muted font-monospace">abhishek.mca.project@university.edu</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Project Phase Notice Card -->
+            <div class="card border border-success-subtle shadow-sm rounded-4 p-4 bg-subtle-green">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="bi bi-info-circle-fill text-forest-green fs-5"></i>
+                    <h6 class="fw-bold text-forest-dark mb-0">Phase 1 Demonstration Scope</h6>
+                </div>
+                <p class="text-muted small mb-0 leading-relaxed">
+                    This contact portal operates in local preview mode. Form submissions are processed safely through
+                    Flask route handlers with flash notifications. External SMTP or mail server configurations will be
+                    linked upon public deployment.
+                </p>
+            </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- Right Column: Demonstration Contact Form                            -->
+        <!-- =================================================================== -->
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <div>
+                        <h4 class="fw-bold font-heading text-forest-dark mb-1">Send a Message</h4>
+                        <p class="text-muted small mb-0">Feel free to inquire about the project roadmap or methodology.
+                        </p>
+                    </div>
+                    <span
+                        class="badge bg-subtle-green text-forest-green border border-success-subtle px-3 py-2 rounded-pill small">
+                        Phase 1 Demo
+                    </span>
+                </div>
+
+                <form action="{{ url_for('contact') }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="row g-3">
+                        <!-- Full Name -->
+                        <div class="col-md-6">
+                            <label for="contactName" class="form-label small fw-semibold text-forest-dark">Your
+                                Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0 text-muted"><i
+                                        class="bi bi-person"></i></span>
+                                <input type="text" class="form-control bg-light border-start-0" id="contactName"
+                                    name="name" placeholder="Prof. / Dr. / Student" required>
+                            </div>
+                        </div>
+
+                        <!-- Email Address -->
+                        <div class="col-md-6">
+                            <label for="contactEmail" class="form-label small fw-semibold text-forest-dark">Email
+                                Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0 text-muted"><i
+                                        class="bi bi-envelope"></i></span>
+                                <input type="email" class="form-control bg-light border-start-0" id="contactEmail"
+                                    name="email" placeholder="name@example.com" required>
+                            </div>
+                        </div>
+
+                        <!-- Subject -->
+                        <div class="col-12">
+                            <label for="contactSubject" class="form-label small fw-semibold text-forest-dark">Subject /
+                                Topic</label>
+                            <select class="form-select bg-light" id="contactSubject" name="subject" required>
+                                <option value="academic_review" selected>Academic Review / Viva Feedback</option>
+                                <option value="dataset_inquiry">PlantVillage Dataset Inquiry</option>
+                                <option value="model_architecture">MobileNetV2 CNN Architecture Discussion</option>
+                                <option value="general_inquiry">General Agriculture AI Query</option>
+                            </select>
+                        </div>
+
+                        <!-- Message -->
+                        <div class="col-12">
+                            <label for="contactMessage" class="form-label small fw-semibold text-forest-dark">Your
+                                Message</label>
+                            <textarea class="form-control bg-light" id="contactMessage" name="message" rows="4"
+                                placeholder="Enter your comments or observations regarding PlantCare AI..."
+                                required></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="col-12 mt-4">
+                            <button type="submit"
+                                class="btn btn-forest-primary rounded-pill px-4 py-2 w-100 d-flex align-items-center justify-content-center gap-2">
+                                <i class="bi bi-send-fill"></i>
+                                <span>Submit Inquiry (Preview Mode)</span>
+                            </button>
+                            <small class="text-muted text-center d-block mt-2 x-small">
+                                <i class="bi bi-shield-lock me-1"></i> Data handled locally via Flask flash sessions.
+                            </small>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- Project FAQ Section                                                     -->
+    <!-- ======================================================================= -->
+    <div class="mt-5 max-w-900 mx-auto">
+        <div class="text-center mb-4">
+            <h4 class="fw-bold font-heading text-forest-dark mb-1">Frequently Asked Questions</h4>
+            <p class="text-muted small">Answers to common academic and technical inquiries.</p>
+        </div>
+
+        <div class="accordion accordion-flush rounded-4 overflow-hidden shadow-sm" id="faqAccordion">
+            <!-- FAQ 1 -->
+            <div class="accordion-item border-0 border-bottom">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button collapsed fw-semibold text-forest-dark bg-white" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false"
+                        aria-controls="collapseOne">
+                        <i class="bi bi-question-circle text-success-accent me-2"></i> What crops will be supported in
+                        Phase 2?
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                    data-bs-parent="#faqAccordion">
+                    <div class="accordion-body text-muted small bg-white">
+                        The PlantVillage dataset covers 14 distinct crops including Apple, Blueberry, Cherry, Corn,
+                        Grape, Orange, Peach, Bell Pepper, Potato, Raspberry, Soybean, Squash, Strawberry, and Tomato
+                        across 38 healthy and diseased categories.
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ 2 -->
+            <div class="accordion-item border-0 border-bottom">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed fw-semibold text-forest-dark bg-white" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
+                        aria-controls="collapseTwo">
+                        <i class="bi bi-question-circle text-success-accent me-2"></i> Why is Pillow used for image
+                        validation in Phase 1?
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                    data-bs-parent="#faqAccordion">
+                    <div class="accordion-body text-muted small bg-white">
+                        Relying merely on file extensions (.jpg, .png) is unsafe because corrupt or malicious files can
+                        be renamed. Pillow opens the byte stream, executes <code>img.verify()</code> to confirm
+                        authentic image headers, and checks valid dimensions before passing to neural network tensors.
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ 3 -->
+            <div class="accordion-item border-0">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed fw-semibold text-forest-dark bg-white" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false"
+                        aria-controls="collapseThree">
+                        <i class="bi bi-question-circle text-success-accent me-2"></i> When will the actual prediction
+                        model be integrated?
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                    data-bs-parent="#faqAccordion">
+                    <div class="accordion-body text-muted small bg-white">
+                        In Phase 2, we will download and preprocess the PlantVillage dataset, train the MobileNetV2
+                        architecture with transfer learning in TensorFlow, serialize the trained model weights, and
+                        connect the prediction inference pipeline to the <code>/predict</code> route.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

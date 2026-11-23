@@ -1,0 +1,303 @@
+{% extends "base.html" %}
+
+{% block title %}About Project & Deep Learning Architecture — PlantCare AI{% endblock %}
+
+{% block content %}
+<div class="container py-4 py-lg-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{{ url_for('home') }}" class="text-decoration-none text-forest-green"><i class="bi bi-house-door"></i> Home</a></li>
+            <li class="breadcrumb-item active text-muted" aria-current="page">About Project</li>
+        </ol>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="text-center max-w-800 mx-auto mb-5">
+        <span class="badge rounded-pill bg-subtle-green text-forest-green px-3 py-1 mb-2 border border-success-subtle fw-semibold">
+            <i class="bi bi-mortarboard-fill text-success-accent me-1"></i> MCA Minor Project Documentation
+        </span>
+        <h1 class="fw-bold font-heading text-forest-dark mb-3">About PlantCare AI &amp; Deep Learning</h1>
+        <p class="text-muted lead fs-6">
+            Exploring the motivation, technical stack, Convolutional Neural Network (CNN) principles, and Phase 2 MobileNetV2 architecture powering automated plant disease diagnosis.
+        </p>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- 1. Project Objective & Motivation                                       -->
+    <!-- ======================================================================= -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-5">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+                <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-subtle-green text-forest-green small fw-semibold mb-3">
+                    <i class="bi bi-bullseye text-success-accent"></i> Core Objective
+                </div>
+                <h3 class="fw-bold font-heading text-forest-dark mb-3">Empowering Agriculture Through Computer Vision</h3>
+                <p class="text-muted leading-relaxed mb-3">
+                    Agricultural plant diseases present a profound risk to global food security, rural livelihoods, and crop productivity. According to global agricultural studies, preventable leaf pathogens result in up to <strong>20% to 40%</strong> of annual crop yield losses.
+                </p>
+                <p class="text-muted leading-relaxed mb-4">
+                    Traditional disease identification relies on visual inspection by agricultural experts, which is slow, expensive, and inaccessible in remote farming regions. <strong>PlantCare AI</strong> addresses this gap by creating an automated, intelligent web platform capable of validating leaf photographs and classifying leaf conditions using modern deep learning.
+                </p>
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <div class="p-3 rounded-3 bg-light border-start border-3 border-success-accent">
+                            <h6 class="fw-bold text-forest-dark mb-1">Target Farmers & Growers</h6>
+                            <small class="text-muted">Instant leaf diagnosis without waiting days for laboratory soil/pathology reports.</small>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="p-3 rounded-3 bg-light border-start border-3 border-success-accent">
+                            <h6 class="fw-bold text-forest-dark mb-1">Sustainable Crop Protection</h6>
+                            <small class="text-muted">Precise identification enables targeted treatments, reducing overuse of chemical pesticides.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 text-center">
+                <div class="p-4 rounded-4 bg-subtle-green border border-success-subtle">
+                    <i class="bi bi-shield-shaded text-success-accent display-3 mb-3 d-block"></i>
+                    <h5 class="fw-bold text-forest-dark mb-1">Phase 1 Foundation</h5>
+                    <p class="text-muted small mb-0">
+                        Establishing secure image upload protocols, MIME inspection, robust Flask routing, and responsive UI before deep learning integration.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- 2. CNN and Deep Learning in Simple Language                             -->
+    <!-- ======================================================================= -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-5">
+        <div class="text-center max-w-700 mx-auto mb-4">
+            <span class="text-uppercase text-success-accent fw-bold small tracking-wider d-block mb-1">Understanding The AI</span>
+            <h3 class="fw-bold font-heading text-forest-dark mb-2">How Convolutional Neural Networks "See" Leaves</h3>
+            <p class="text-muted small">
+                A simple, beginner-friendly explanation of computer vision and deep learning mechanics.
+            </p>
+        </div>
+
+        <!-- Architectural Diagram SVG -->
+        <div class="p-3 p-md-4 rounded-4 bg-light text-center mb-4 border border-light-subtle">
+            <img src="{{ url_for('static', filename='images/cnn-diagram.svg') }}" alt="CNN Pipeline Diagram" class="img-fluid cnn-pipeline-svg">
+            <div class="text-muted x-small mt-2">
+                <i class="bi bi-info-circle me-1"></i> Conceptual Flow: Input Leaf Image &rarr; Feature Extraction Filters &rarr; Pooling Dimension Reduction &rarr; Dense Classification
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Step 1 -->
+            <div class="col-md-4">
+                <div class="h-100 p-3 rounded-4 bg-subtle-green border border-success-subtle">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-forest-primary text-white rounded-pill">1</span>
+                        <h6 class="fw-bold text-forest-dark mb-0">Convolutional Filters</h6>
+                    </div>
+                    <p class="text-muted small mb-0 leading-relaxed">
+                        Just as the human eye scans an object, convolutional kernels slide across the leaf image pixels. Early layers capture fine details like edges, veins, and color gradients; deeper layers combine these into complex disease spots and lesion rings.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="col-md-4">
+                <div class="h-100 p-3 rounded-4 bg-subtle-green border border-success-subtle">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-forest-primary text-white rounded-pill">2</span>
+                        <h6 class="fw-bold text-forest-dark mb-0">Pooling & Downsampling</h6>
+                    </div>
+                    <p class="text-muted small mb-0 leading-relaxed">
+                        Pooling layers (such as Max Pooling) reduce spatial dimensions while retaining the most prominent activation features. This makes the neural network invariant to slight leaf rotations, translations, or scale differences.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="col-md-4">
+                <div class="h-100 p-3 rounded-4 bg-subtle-green border border-success-subtle">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-forest-primary text-white rounded-pill">3</span>
+                        <h6 class="fw-bold text-forest-dark mb-0">Dense Classifier & Softmax</h6>
+                    </div>
+                    <p class="text-muted small mb-0 leading-relaxed">
+                        Extracted high-level features are flattened and passed to fully connected neural layers. The final Softmax layer converts raw activation scores into probability percentages across each target plant disease class.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- 3. Why MobileNetV2 & Technology Stack                                   -->
+    <!-- ======================================================================= -->
+    <div class="row g-4 mb-5">
+        <!-- MobileNetV2 Explanation -->
+        <div class="col-lg-6">
+            <div class="card h-100 border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <div class="icon-circle-sm bg-subtle-green text-forest-green">
+                        <i class="bi bi-cpu-fill"></i>
+                    </div>
+                    <h4 class="fw-bold font-heading text-forest-dark mb-0">Why MobileNetV2?</h4>
+                </div>
+                <p class="text-muted leading-relaxed small mb-3">
+                    For agricultural applications, models must perform rapidly on modest hardware without requiring expensive GPU servers. <strong>MobileNetV2</strong> is an industry-leading architecture optimized specifically for mobile and web deployment.
+                </p>
+                <ul class="list-unstyled mb-0 d-flex flex-column gap-3 small text-muted">
+                    <li class="d-flex align-items-start gap-2">
+                        <i class="bi bi-check2-circle text-success-accent fs-6 mt-1 flex-shrink-0"></i>
+                        <div>
+                            <strong class="text-forest-dark">Depthwise Separable Convolutions:</strong>
+                            Splits standard convolution into a depthwise layer and a pointwise (1×1) layer, cutting computation by 8× to 9× with negligible accuracy loss.
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start gap-2">
+                        <i class="bi bi-check2-circle text-success-accent fs-6 mt-1 flex-shrink-0"></i>
+                        <div>
+                            <strong class="text-forest-dark">Inverted Residual Blocks:</strong>
+                            Expands to high-dimensional space for non-linear feature filtering and projects back to low dimensions, preserving gradient flow.
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start gap-2">
+                        <i class="bi bi-check2-circle text-success-accent fs-6 mt-1 flex-shrink-0"></i>
+                        <div>
+                            <strong class="text-forest-dark">Transfer Learning & PlantVillage:</strong>
+                            Pre-trained on ImageNet and fine-tuned on the 54,000+ PlantVillage leaf dataset covering 14 crops (tomato, potato, apple, corn, etc.).
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Full Technology Stack Overview -->
+        <div class="col-lg-6">
+            <div class="card h-100 border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <div class="icon-circle-sm bg-subtle-green text-forest-green">
+                        <i class="bi bi-stack"></i>
+                    </div>
+                    <h4 class="fw-bold font-heading text-forest-dark mb-0">Technology Stack</h4>
+                </div>
+                <p class="text-muted leading-relaxed small mb-3">
+                    The system is architected with modern, battle-tested open-source libraries:
+                </p>
+
+                <div class="d-flex flex-column gap-3 small">
+                    <!-- Tech 1 -->
+                    <div class="p-3 rounded-3 bg-light d-flex align-items-center justify-content-between">
+                        <div>
+                            <strong class="text-forest-dark d-block">Python 3 &amp; Flask</strong>
+                            <span class="text-muted">Lightweight WSGI backend, routing, request validation, Jinja2 templating.</span>
+                        </div>
+                        <span class="badge bg-subtle-green text-forest-green border">Backend</span>
+                    </div>
+
+                    <!-- Tech 2 -->
+                    <div class="p-3 rounded-3 bg-light d-flex align-items-center justify-content-between">
+                        <div>
+                            <strong class="text-forest-dark d-block">Bootstrap 5, CSS3 &amp; JavaScript</strong>
+                            <span class="text-muted">Responsive mobile-first layout, drag-and-drop file API, live image previews.</span>
+                        </div>
+                        <span class="badge bg-subtle-green text-forest-green border">Frontend</span>
+                    </div>
+
+                    <!-- Tech 3 -->
+                    <div class="p-3 rounded-3 bg-light d-flex align-items-center justify-content-between">
+                        <div>
+                            <strong class="text-forest-dark d-block">Pillow (PIL) &amp; Werkzeug</strong>
+                            <span class="text-muted">Safe filename sanitization, image header integrity verification, dimension checks.</span>
+                        </div>
+                        <span class="badge bg-subtle-green text-forest-green border">Security</span>
+                    </div>
+
+                    <!-- Tech 4 -->
+                    <div class="p-3 rounded-3 bg-light d-flex align-items-center justify-content-between">
+                        <div>
+                            <strong class="text-forest-dark d-block">TensorFlow &amp; MobileNetV2</strong>
+                            <span class="text-muted">Upcoming deep learning engine for 38-class plant leaf disease classification.</span>
+                        </div>
+                        <span class="badge bg-secondary text-white">Phase 2 AI</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- 4. Project Roadmap (Phase 1 -> Phase 2 -> Phase 3)                      -->
+    <!-- ======================================================================= -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+        <div class="text-center max-w-700 mx-auto mb-5">
+            <span class="text-uppercase text-success-accent fw-bold small tracking-wider d-block mb-1">Development Phases</span>
+            <h3 class="fw-bold font-heading text-forest-dark mb-2">Project Evolution &amp; Future Milestones</h3>
+            <p class="text-muted small">
+                PlantCare AI follows a modular 3-phase engineering methodology designed for rigorous academic review.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Phase 1 (Completed) -->
+            <div class="col-lg-4">
+                <div class="card h-100 border border-success-subtle rounded-4 p-4 bg-subtle-green shadow-xs">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="badge bg-forest-primary text-white rounded-pill px-3 py-1">Phase 1 (Current)</span>
+                        <i class="bi bi-check-circle-fill text-success-accent fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold text-forest-dark mb-2">Web Architecture &amp; Validation</h5>
+                    <ul class="list-unstyled mb-0 small text-muted d-flex flex-column gap-2">
+                        <li><i class="bi bi-check2 text-success-accent me-1"></i> Full Flask MVC application structure</li>
+                        <li><i class="bi bi-check2 text-success-accent me-1"></i> Drag-and-drop responsive UI</li>
+                        <li><i class="bi bi-check2 text-success-accent me-1"></i> Pillow image verification pipeline</li>
+                        <li><i class="bi bi-check2 text-success-accent me-1"></i> 5 MB size limit enforcement</li>
+                        <li><i class="bi bi-check2 text-success-accent me-1"></i> Comprehensive test suite (routes + uploads)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Phase 2 (Upcoming) -->
+            <div class="col-lg-4">
+                <div class="card h-100 border rounded-4 p-4 bg-white shadow-xs">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="badge bg-primary text-white rounded-pill px-3 py-1">Phase 2 (Upcoming)</span>
+                        <i class="bi bi-clock-history text-primary fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold text-forest-dark mb-2">Model Training &amp; Inference</h5>
+                    <ul class="list-unstyled mb-0 small text-muted d-flex flex-column gap-2">
+                        <li><i class="bi bi-arrow-right text-primary me-1"></i> PlantVillage dataset acquisition</li>
+                        <li><i class="bi bi-arrow-right text-primary me-1"></i> Data augmentation &amp; normalization</li>
+                        <li><i class="bi bi-arrow-right text-primary me-1"></i> MobileNetV2 fine-tuning on 38 classes</li>
+                        <li><i class="bi bi-arrow-right text-primary me-1"></i> Model serialization (.keras / .h5)</li>
+                        <li><i class="bi bi-arrow-right text-primary me-1"></i> Real-time inference API integration</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Phase 3 (Future) -->
+            <div class="col-lg-4">
+                <div class="card h-100 border rounded-4 p-4 bg-white shadow-xs">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="badge bg-secondary text-white rounded-pill px-3 py-1">Phase 3 (Future)</span>
+                        <i class="bi bi-stars text-secondary fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold text-forest-dark mb-2">Agronomic Intelligence</h5>
+                    <ul class="list-unstyled mb-0 small text-muted d-flex flex-column gap-2">
+                        <li><i class="bi bi-arrow-right text-secondary me-1"></i> Organic remedies &amp; chemical dosage DB</li>
+                        <li><i class="bi bi-arrow-right text-secondary me-1"></i> Regional language support (Hindi, etc.)</li>
+                        <li><i class="bi bi-arrow-right text-secondary me-1"></i> PDF Diagnostic report export</li>
+                        <li><i class="bi bi-arrow-right text-secondary me-1"></i> Progressive Web App (offline caching)</li>
+                        <li><i class="bi bi-arrow-right text-secondary me-1"></i> Production cloud deployment</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="{{ url_for('predict') }}" class="btn btn-forest-primary rounded-pill px-4 py-2">
+                <i class="bi bi-camera me-1"></i> Test Phase 1 Image Validation Pipeline
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
